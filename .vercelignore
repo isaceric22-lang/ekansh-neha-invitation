@@ -1,0 +1,3 @@
+# Not needed to build the site: demo videos for the README, and local build output.
+docs
+dist

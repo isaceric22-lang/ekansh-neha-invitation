@@ -1,0 +1,145 @@
+.calculator {
+    --btn-size: 87px;
+    --btn-gap: 8px;
+    --btn-font: 38px;
+    --orange-font: 44px;
+    --current-font: 69px;
+    --previous-font: 28px;
+    --pad: 15px;
+    --radius: 62px;
+
+    width: min(402px, 100cqw);
+    max-width: 100%;
+    height: min(874px, 100vh);
+    height: min(874px, 100svh);
+    background-color: #000;
+    border-radius: var(--radius);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding: var(--pad);
+    margin: 0 auto;
+    font-family: "SF Pro Display", "SF Pro", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.display {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+    padding: 0 10px 12px;
+    color: #f8f8f8;
+    overflow: hidden;
+    gap: 4px;
+}
+
+.previousOperation {
+    font-size: var(--previous-font);
+    color: rgba(248, 248, 248, 0.55);
+    line-height: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+    text-align: right;
+    font-weight: 400;
+}
+
+.currentValue {
+    font-size: var(--current-font);
+    font-weight: 510;
+    line-height: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+    letter-spacing: -1px;
+    text-align: right;
+    width: 100%;
+}
+
+.buttonsGrid {
+    display: grid;
+    grid-template-columns: repeat(4, var(--btn-size));
+    grid-template-rows: repeat(5, var(--btn-size));
+    gap: var(--btn-gap);
+    justify-content: center;
+    margin-top: auto;
+}
+
+.button {
+    width: var(--btn-size);
+    height: var(--btn-size);
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: filter 0.15s ease, transform 0.05s ease;
+    user-select: none;
+    position: relative;
+    outline: none;
+    color: #f8f8f8;
+    font-family: inherit;
+    font-size: var(--btn-font);
+    font-weight: 510;
+    line-height: 1;
+    padding: 0;
+}
+
+.button::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.button:active {
+    filter: brightness(1.35);
+    transform: scale(0.96);
+}
+
+.dark {
+    background-color: #212121;
+}
+
+.gray {
+    background-color: #5e5e5e;
+}
+
+.orange {
+    background-color: #ff9200;
+    font-family: "SF Pro Rounded", ui-rounded, -apple-system, system-ui, sans-serif;
+    font-size: var(--orange-font);
+    font-weight: 400;
+}
+
+/* Frame-relative: @container/cqw track the #root phone frame, not the window. */
+@container (max-width: 420px) {
+    .calculator {
+        --btn-size: calc((100cqw - 30px - 24px) / 4);
+        --btn-gap: 8px;
+        --btn-font: calc(var(--btn-size) * 0.44);
+        --orange-font: calc(var(--btn-size) * 0.5);
+        --current-font: calc(var(--btn-size) * 0.79);
+        --previous-font: calc(var(--btn-size) * 0.32);
+        --pad: 15px;
+        --radius: 40px;
+        height: auto;
+        min-height: 100vh;
+        min-height: 100svh;
+    }
+}
+
+@container (max-width: 360px) {
+    .calculator {
+        --btn-gap: 6px;
+        --btn-size: calc((100cqw - 24px - 18px) / 4);
+        --pad: 12px;
+    }
+}

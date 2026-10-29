@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 480">
+  <!-- Hand-drawn stand-in for a light-mode map tile (no third-party map data). -->
+  <rect width="480" height="480" fill="#f3f0e8"/>
+  <path d="M0 0H480V96C392 118 296 132 206 152C126 170 58 184 0 198Z" fill="#9dd6f3"/>
+  <path d="M0 272C132 244 300 208 480 176V330C306 352 146 380 0 410Z" fill="#cbe7b4"/>
+  <g fill="#e9e5dc">
+    <path d="M24 440L128 420L136 470L32 480Z"/>
+    <path d="M168 412L276 392L284 446L176 466Z"/>
+    <path d="M318 384L446 360L454 414L326 438Z"/>
+  </g>
+  <g fill="none" stroke-linecap="round">
+    <path d="M-20 244C140 214 320 178 500 146" stroke="#ddd7cc" stroke-width="34"/>
+    <path d="M-20 244C140 214 320 178 500 146" stroke="#ffffff" stroke-width="27"/>
+    <path d="M-20 392C150 364 320 334 500 304" stroke="#ddd7cc" stroke-width="14"/>
+    <path d="M-20 392C150 364 320 334 500 304" stroke="#ffffff" stroke-width="10"/>
+    <path d="M300 180L336 500" stroke="#ddd7cc" stroke-width="14"/>
+    <path d="M300 180L336 500" stroke="#ffffff" stroke-width="10"/>
+  </g>
+  <path id="road" d="M-20 250C140 220 320 184 500 152" fill="none"/>
+  <text font-family="-apple-system, system-ui, sans-serif" font-size="17" font-weight="600" letter-spacing="1.5" fill="#8a8a8a">
+    <textPath href="#road" startOffset="8%">JHIL MIL INDUSTRIAL AREA</textPath>
+  </text>
+</svg>

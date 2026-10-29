@@ -1,0 +1,24 @@
+{
+  "name": "Ekansh & Neha · Tilak & Godh Bharai",
+  "short_name": "Ekansh & Neha",
+  "description": "An invitation disguised as an iPhone, for the Tilak and Godh Bharai on 19 November 2026.",
+  "lang": "en",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1E0610",
+  "theme_color": "#2A0812",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
