@@ -16,7 +16,6 @@ import { LocationWidget } from "../components/LocationWidget";
 import { SafariWidget } from "../components/SafariWidget";
 import Dock from "../components/Dock";
 import { AppNavProvider, useAppOpener, type AppDef } from "./app-nav";
-import { MAPS_URL } from "../lib/maps";
 import SafariPage from "./SafariPage";
 import MapsPage from "./MapsPage";
 
@@ -132,6 +131,32 @@ function CalendarWidgetButton() {
   );
 }
 
+// The Maps widget opens the in-app Map screen instead of navigating the page
+// away — tapping it should feel like launching an app, not leaving the phone.
+function LocationWidgetButton() {
+  const openApp = useAppOpener();
+  const rootRef = useRef<HTMLDivElement>(null);
+  return (
+    <div ref={rootRef} style={{ borderRadius: 27, overflow: "hidden" }}>
+      <LocationWidget
+        onClick={() => {
+          const el = rootRef.current;
+          if (!el) return;
+          openApp(
+            {
+              key: "map",
+              iconSrc: "/icons/map.svg",
+              render: () => <MapsPage />,
+              hideIcon: true,
+            },
+            el
+          );
+        }}
+      />
+    </div>
+  );
+}
+
 export default function IosAppFolder() {
   const extra = Math.abs(BG_OFFSET_Y) * 2;
   return (
@@ -159,7 +184,7 @@ export default function IosAppFolder() {
             <CalendarWidgetButton />
           </div>
           <div className="col-span-2 row-span-2">
-            <LocationWidget href={MAPS_URL} />
+            <LocationWidgetButton />
           </div>
           <div className="col-span-2 row-span-2">
             <AppFolder title="Apps" items={ITEMS} />

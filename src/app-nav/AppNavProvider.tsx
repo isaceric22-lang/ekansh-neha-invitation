@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useReducer, useState, type ReactNode } from "react";
+import {
+  useCallback,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import { AnimatePresence } from "framer-motion";
 import { AppModal } from "../app-modal/AppModal";
 import {
@@ -17,28 +24,49 @@ const DEFAULT_APP_OPEN_DELAY_MS = 100;
 
 type Phase = "closed" | "opening" | "open" | "closing";
 
-type State = { phase: Phase; app: AppDef | null; origin: ModalOrigin | null };
+type ActiveApp = { app: AppDef; origin: ModalOrigin };
+
+type State = {
+  phase: Phase;
+  /** The app that is on screen (or shrinking away during "closing"). */
+  active: ActiveApp | null;
+  /** A tap that arrived while the previous app was still closing. */
+  queued: ActiveApp | null;
+};
 
 type Action =
-  | { type: "open"; app: AppDef; origin: ModalOrigin }
+  | { type: "open"; active: ActiveApp }
   | { type: "opened" }
   | { type: "close" }
-  | { type: "closed" };
+  | { type: "exited" };
 
-const INITIAL: State = { phase: "closed", app: null, origin: null };
+const INITIAL: State = { phase: "closed", active: null, queued: null };
 
 function reduce(state: State, action: Action): State {
   switch (action.type) {
     case "open":
-      return state.phase === "closed"
-        ? { phase: "opening", app: action.app, origin: action.origin }
-        : state;
+      if (state.phase === "closed") {
+        return { phase: "opening", active: action.active, queued: null };
+      }
+      // iOS lets you tap another icon while one app is collapsing. Remember it
+      // and launch once the exit animation has handed the screen back.
+      if (state.phase === "closing") {
+        return { ...state, queued: action.active };
+      }
+      return state;
     case "opened":
       return state.phase === "opening" ? { ...state, phase: "open" } : state;
     case "close":
-      return state.phase === "open" ? { ...state, phase: "closing" } : state;
-    case "closed":
-      return state.phase === "closing" ? INITIAL : state;
+      // Closing is accepted while the open spring is still running, so a fast
+      // tap on the close button is never swallowed.
+      return state.phase === "opening" || state.phase === "open"
+        ? { ...state, phase: "closing" }
+        : state;
+    case "exited":
+      if (state.phase !== "closing") return state;
+      return state.queued
+        ? { phase: "opening", active: state.queued, queued: null }
+        : INITIAL;
   }
 }
 
@@ -71,6 +99,27 @@ export function AppNavProvider({
   const [state, dispatch] = useReducer(reduce, INITIAL);
   const [viewport, setViewport] = useState(() => env.readViewport());
 
+  // Event handlers need the phase as of the last commit, not the phase from
+  // the render that happened to create the callback.
+  const stateRef = useRef(state);
+  stateRef.current = state;
+
+  // Announce an app opening exactly once, including one that was queued while
+  // the previous app was still closing.
+  const announcedKey = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (state.phase !== "opening" || !state.active) return;
+    const key = state.active.app.key;
+    if (announcedKey.current === key) return;
+    announcedKey.current = key;
+    state.active.app.onOpen?.();
+  }, [state.phase, state.active]);
+
+  useEffect(() => {
+    if (state.phase === "closing") announcedKey.current = null;
+  }, [state.phase]);
+
   useEffect(() => {
     if (state.phase !== "opening") return;
     return env.schedule(() => dispatch({ type: "opened" }), appOpenDelayMs);
@@ -82,39 +131,46 @@ export function AppNavProvider({
   );
 
   const open = useCallback((app: AppDef, origin: ModalOrigin) => {
-    dispatch({ type: "open", app, origin });
-    app.onOpen?.();
+    const current = stateRef.current;
+    if (current.phase === "opening" || current.phase === "open") return;
+    dispatch({ type: "open", active: { app, origin } });
   }, []);
 
   const close = useCallback(() => {
-    if (state.phase !== "open") return;
-    state.app?.onClose?.();
+    const current = stateRef.current;
+    if (current.phase !== "opening" && current.phase !== "open") return;
+    current.active?.app.onClose?.();
     dispatch({ type: "close" });
-  }, [state.phase, state.app]);
+  }, []);
 
-  const onExitComplete = useCallback(() => dispatch({ type: "closed" }), []);
+  const onExitComplete = useCallback(() => dispatch({ type: "exited" }), []);
 
-  const mounted = state.phase === "opening" || state.phase === "open";
+  // The frame disappears as soon as closing starts so AnimatePresence can run
+  // the exit animation from wherever the card currently is. The active app (and
+  // its origin) is retained until the exit completes, so `openKey` does not
+  // flicker and a queued launch still knows where it came from.
+  const present =
+    state.active !== null &&
+    (state.phase === "opening" || state.phase === "open");
   const frame =
-    mounted && state.app && state.origin
+    present && state.active
       ? buildModalFrame(
           {
-            key: state.app.key,
-            iconSrc: state.app.iconSrc,
-            content: state.app.render(),
-            chrome: buildChrome(state.app),
-            hideIcon: state.app.hideIcon,
+            key: state.active.app.key,
+            iconSrc: state.active.app.iconSrc,
+            content: state.active.app.render(),
+            chrome: buildChrome(state.active.app),
+            hideIcon: state.active.app.hideIcon,
           },
-          state.origin,
+          state.active.origin,
           viewport,
-          spring,
-          state.phase === "open"
+          spring
         )
       : null;
 
   return (
     <AppNavContext.Provider
-      value={{ openKey: state.app?.key ?? null, open, close, env }}
+      value={{ openKey: state.active?.app.key ?? null, open, close, env }}
     >
       {children}
       <AnimatePresence onExitComplete={onExitComplete}>

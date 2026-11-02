@@ -24,8 +24,6 @@ export type RenderPlanInput = {
   state: FolderState;
   rects: Readonly<Record<string, LayoutRect>>;
   center: { x: number; y: number } | null;
-  /** Key of the item whose modal is mounted/animating — hidden in the grid. */
-  hiddenKey: string | null;
   motion: MotionConfig;
 };
 
@@ -36,7 +34,6 @@ export type ItemFrame = {
   layoutId: string | undefined;
   hasSharedElement: boolean;
   tappable: boolean;
-  hidden: boolean;
   motion: MotionProps;
   reactKey: string;
 };
@@ -221,7 +218,7 @@ function closedShell(folderSpring: Transition): MotionProps {
 }
 
 export function buildRenderPlan(input: RenderPlanInput): RenderPlan {
-  const { items, folderId, state, rects, center, hiddenKey, motion } = input;
+  const { items, folderId, state, rects, center, motion } = input;
   const plan = planLayout(items, folderId);
   const isOpen = selectors.isShellOpen(state);
 
@@ -243,7 +240,6 @@ export function buildRenderPlan(input: RenderPlanInput): RenderPlan {
       layoutId: plan.layoutIdFor(item.key),
       hasSharedElement,
       tappable: plan.appsByKey.has(item.key) || item.href != null,
-      hidden: hiddenKey === item.key,
       motion: itemMotion(
         hasSharedElement,
         rect,

@@ -30,7 +30,6 @@ export function OpenItem({
       <div
         {...{ [APP_ICON_ATTR]: item.key }}
         className="w-[4.25rem] h-[4.25rem]"
-        style={{ visibility: item.hidden ? "hidden" : "visible" }}
       >
         <Tile
           layoutId={item.layoutId}

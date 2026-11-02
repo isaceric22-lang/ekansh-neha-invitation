@@ -8,6 +8,8 @@ interface LocationWidgetProps {
   mapSrc?: string;
   /** Tap opens this URL in a new tab. */
   href?: string;
+  /** Or handle the tap in-app (e.g. open the Map app). */
+  onClick?: () => void;
 }
 
 export function LocationWidget({
@@ -16,17 +18,17 @@ export function LocationWidget({
   photoSrc = "/profile.jpg",
   mapSrc = "/map-tile.svg",
   href,
+  onClick,
 }: LocationWidgetProps) {
+  const handleClick = onClick ?? (href ? () => openMaps(href) : undefined);
   return (
     <div
-      onClick={
-        href ? () => openMaps(href) : undefined
-      }
-      role={href ? "button" : undefined}
-      aria-label={href ? `Open ${street} in Maps` : undefined}
+      onClick={handleClick}
+      role={handleClick ? "button" : undefined}
+      aria-label={handleClick ? `Open ${street} in Maps` : undefined}
       className={
         "relative h-[158px] w-[158px] overflow-hidden" +
-        (href
+        (handleClick
           ? " cursor-pointer transition-transform duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] active:scale-[0.97]"
           : "")
       }

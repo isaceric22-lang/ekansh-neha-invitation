@@ -1,14 +1,14 @@
-import { MapPin, Navigation } from "lucide-react";
+import { Navigation } from "lucide-react";
 import { MAPS_URL, openMaps } from "../lib/maps";
-import { WEDDING } from "./invitation/data";
+import { VENUE_MAP_EMBED, WEDDING } from "./invitation/data";
 
 const SF_STACK =
   '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif';
 
 /**
- * The Map app. The tile is our own illustration, so the screen works offline and
- * never depends on a Maps API key; Directions hands off to Google Maps, which is
- * where real routing belongs.
+ * The Map app. A live Google Maps embed is the map itself; the illustrated
+ * tile underneath is only a fallback for slow/offline loads. Directions still
+ * hands off to Google Maps, which is where real routing belongs.
  */
 export default function MapsPage() {
   return (
@@ -16,6 +16,7 @@ export default function MapsPage() {
       className="relative h-full w-full overflow-hidden"
       style={{ fontFamily: SF_STACK, background: "#EDE9E0" }}
     >
+      {/* Offline/slow-load fallback, visible until the iframe paints. */}
       <div
         className="absolute inset-0"
         style={{
@@ -25,16 +26,23 @@ export default function MapsPage() {
         }}
       />
 
-      {/* Venue pin, sitting above the sheet. */}
-      <div className="absolute left-1/2 top-[42%] flex -translate-x-1/2 -translate-y-full flex-col items-center">
-        <div className="rounded-full bg-white px-3 py-1.5 text-[12px] font-semibold text-[#1c1c1e] shadow-[0_4px_14px_rgba(0,0,0,0.18)]">
-          {WEDDING.venue}
-        </div>
-        <div className="mt-1 flex h-9 w-9 items-center justify-center rounded-full bg-[#C99A4A] shadow-[0_6px_16px_rgba(0,0,0,0.28)]">
-          <MapPin size={20} strokeWidth={2.4} className="text-white" />
-        </div>
-        <div className="h-1.5 w-1.5 rounded-full bg-black/25 blur-[1px]" />
-      </div>
+      <iframe
+        src={VENUE_MAP_EMBED}
+        title={`Map showing ${WEDDING.venue}`}
+        loading="eager"
+        referrerPolicy="no-referrer-when-downgrade"
+        allowFullScreen
+        className="absolute inset-0 h-full w-full border-0"
+      />
+
+      {/* Soft top scrim so the status bar and close button stay legible. */}
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-[120px]"
+        style={{
+          background:
+            "linear-gradient(to bottom, rgba(0,0,0,0.28), rgba(0,0,0,0))",
+        }}
+      />
 
       <div
         className="absolute inset-x-0 bottom-0 rounded-t-[22px] bg-white/95 px-5 pt-3 shadow-[0_-10px_30px_rgba(0,0,0,0.14)] backdrop-blur-xl"
@@ -60,7 +68,7 @@ export default function MapsPage() {
           Directions
         </button>
         <p className="mt-2 text-center text-[11.5px] leading-[15px] text-[#8e8e93]">
-          Illustrated map. Directions opens your maps app for the real route.
+          Directions opens Google Maps for the real route.
         </p>
       </div>
     </div>

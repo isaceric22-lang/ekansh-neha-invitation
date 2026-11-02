@@ -7,21 +7,37 @@ const TEXT_STACK =
 
 type Entry =
   | { kind: "date"; text: string }
-  | { kind: "text"; side: "sent" | "received"; text: string; tapback?: string };
+  | { kind: "text"; side: "sent" | "received"; text: string; tapback?: string }
+  | {
+      kind: "image";
+      side: "sent" | "received";
+      src: string;
+      alt: string;
+      tapback?: string;
+    };
 
 // "sent" = Ekansh, "received" = Neha.
 const THREAD: Entry[] = [
   { kind: "date", text: "Today 9:41" },
   { kind: "text", side: "received", text: "You awake? I keep re-reading the invitation 😅" },
-  { kind: "text", side: "sent", text: "So it isn't just me doing that 🥰" },
+  { kind: "text", side: "sent", text: "Same here. I've checked the date three times 🥰" },
+  { kind: "text", side: "received", text: "Friday the 15th. It still doesn't feel real." },
+  { kind: "text", side: "sent", text: "It will when the mandap goes up." },
+  { kind: "text", side: "received", text: "Okay, look what I found for the cake table." },
+  {
+    kind: "image",
+    side: "received",
+    src: "/message.jpeg",
+    alt: "Two cat wedding cake toppers",
+  },
   {
     kind: "text",
     side: "received",
-    text: "The little Ganesha at the start got me 🥺",
+    text: "I'm obsessed. Look at her little bouquet 🥺",
     tapback: "❤️",
   },
-  { kind: "text", side: "sent", text: "That one's for your mum. She'll cry 😄" },
-  { kind: "text", side: "received", text: "She cried at the menu tasting, so yes 😭" },
+  { kind: "text", side: "sent", text: "Okay, those are coming home with us 😄" },
+  { kind: "text", side: "received", text: "Good. I was going to buy them anyway 🙈" },
   { kind: "text", side: "sent", text: "74 days. Not that I'm counting 😌" },
   {
     kind: "text",
@@ -65,6 +81,41 @@ function TextBubble({
             <EmojiText>{text}</EmojiText>
           </span>
         </div>
+        {tapback && (
+          <span
+            className="absolute -top-3 -right-1 z-20 flex h-[26px] w-[26px] items-center justify-center rounded-full bg-white text-[13px] leading-none shadow-[0_1px_3px_rgba(0,0,0,0.18)] ring-1 ring-black/5"
+            aria-label={`Reacted ${tapback}`}
+          >
+            <EmojiText>{tapback}</EmojiText>
+          </span>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ImageBubble({
+  side,
+  src,
+  alt,
+  tapback,
+}: {
+  side: "sent" | "received";
+  src: string;
+  alt: string;
+  tapback?: string;
+}) {
+  const sent = side === "sent";
+  return (
+    <div className={`flex ${sent ? "justify-end" : "justify-start"} mb-1.5`}>
+      <div className="relative max-w-[75%]">
+        <img
+          src={src}
+          alt={alt}
+          draggable={false}
+          className="block w-[220px] max-w-full select-none rounded-[18px] object-cover"
+          style={{ aspectRatio: "4 / 3" }}
+        />
         {tapback && (
           <span
             className="absolute -top-3 -right-1 z-20 flex h-[26px] w-[26px] items-center justify-center rounded-full bg-white text-[13px] leading-none shadow-[0_1px_3px_rgba(0,0,0,0.18)] ring-1 ring-black/5"
@@ -136,6 +187,17 @@ export default function MessagesPage({ onBack }: { onBack?: () => void }) {
                 >
                   {e.text}
                 </div>
+              );
+            }
+            if (e.kind === "image") {
+              return (
+                <ImageBubble
+                  key={i}
+                  side={e.side}
+                  src={e.src}
+                  alt={e.alt}
+                  tapback={e.tapback}
+                />
               );
             }
             return (

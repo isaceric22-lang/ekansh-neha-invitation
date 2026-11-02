@@ -123,6 +123,7 @@ type AlbumItem = {
   url: string;
   height: number;
   kind?: "image" | "video";
+  poster?: string;
 };
 
 export default function PhotosPage() {

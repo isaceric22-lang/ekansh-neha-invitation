@@ -2,7 +2,7 @@
 // MIT + Commons Clause: fine to use inside an app or site, but not to sell or
 // redistribute the component on its own. Full notice in CREDITS.md.
 
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { gsap } from 'gsap';
 
 const useMeasure = <T extends HTMLElement>() => {
@@ -55,6 +55,66 @@ interface MasonryProps {
 // placeholder (iOS Photos dark) instead of letting the black page bg show as a
 // gap. See PhotosPage's bg-black container.
 const SKELETON = '#2a2a2c';
+
+/**
+ * A muted looping video tile. It autoplays when it enters the scroll viewport
+ * and pauses when it leaves, so the grid behaves like the Photos app instead of
+ * showing a frozen poster frame forever.
+ */
+function MasonryVideo({
+  src,
+  poster,
+  className,
+  style
+}: {
+  src: string;
+  poster?: string;
+  className: string;
+  style: CSSProperties;
+}) {
+  const ref = useRef<HTMLVideoElement | null>(null);
+
+  useEffect(() => {
+    const video = ref.current;
+    if (!video) return;
+    video.muted = true;
+    const play = () => {
+      void video.play().catch(() => {
+        // Autoplay can be refused until the user interacts; controls in the
+        // lightbox still let them start it explicitly.
+      });
+    };
+    play();
+    if (typeof IntersectionObserver === 'undefined') return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) play();
+        else video.pause();
+      },
+      { threshold: 0.15 }
+    );
+    observer.observe(video);
+    return () => {
+      observer.disconnect();
+      video.pause();
+    };
+  }, [src]);
+
+  return (
+    <video
+      ref={ref}
+      src={src}
+      poster={poster}
+      autoPlay
+      muted
+      loop
+      playsInline
+      preload="metadata"
+      className={className}
+      style={style}
+    />
+  );
+}
 
 const Masonry: React.FC<MasonryProps> = ({
   items,
@@ -223,12 +283,9 @@ const Masonry: React.FC<MasonryProps> = ({
           onMouseLeave={e => handleMouseLeave(item.id, e.currentTarget)}
         >
           {item.kind === 'video' ? (
-            <video
-              src={item.img}
+            <MasonryVideo
+              src={item.url}
               poster={item.poster}
-              muted
-              playsInline
-              preload="metadata"
               className="masonry-img relative h-full w-full object-cover"
               style={{ opacity: 0 }}
             />

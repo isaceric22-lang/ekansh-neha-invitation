@@ -13,6 +13,8 @@ export interface LightboxPhoto {
   id: string;
   url: string;
   kind?: "image" | "video";
+  /** Still frame shown until the video decodes its first frame. */
+  poster?: string;
 }
 
 // iOS-style spring used for paging + dismiss snap-back.
@@ -25,17 +27,26 @@ interface Props {
 }
 
 // A single video slide: only the page currently on screen plays.
-function VideoSlide({ src, active }: { src: string; active: boolean }) {
+function VideoSlide({
+  src,
+  poster,
+  active,
+}: {
+  src: string;
+  poster?: string;
+  active: boolean;
+}) {
   const ref = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
     const video = ref.current;
     if (!video) return;
     if (active) {
-      video.play().catch(() => {});
+      void video.play().catch(() => {
+        // If the browser blocks sound-on autoplay, the controls are right there.
+      });
     } else {
       video.pause();
-      video.currentTime = 0;
     }
   }, [active]);
 
@@ -43,8 +54,10 @@ function VideoSlide({ src, active }: { src: string; active: boolean }) {
     <video
       ref={ref}
       src={src}
+      poster={poster}
       controls
       playsInline
+      preload="auto"
       className="max-h-full max-w-full select-none object-contain"
     />
   );
@@ -198,7 +211,7 @@ export default function PhotoLightbox({ photos, index, onClose }: Props) {
                 className="flex h-full w-full items-center justify-center"
                 style={{ scale: i === page ? imgScale : 1 }}
               >
-                <VideoSlide src={p.url} active={i === page} />
+                <VideoSlide src={p.url} poster={p.poster} active={i === page} />
               </motion.div>
             ) : (
               <motion.img

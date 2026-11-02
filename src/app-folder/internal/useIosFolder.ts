@@ -61,18 +61,9 @@ export function useIosFolder(
         state,
         rects: geo.itemRects,
         center: geo.center,
-        hiddenKey: nav.openKey,
         motion: { folderSpring },
       }),
-    [
-      items,
-      folderId,
-      state,
-      geo.itemRects,
-      geo.center,
-      nav.openKey,
-      folderSpring,
-    ]
+    [items, folderId, state, geo.itemRects, geo.center, folderSpring]
   );
 
   const openFolder = useCallback(() => {
