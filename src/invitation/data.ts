@@ -36,8 +36,9 @@ export function googleCalendarUrl() {
   const params = new URLSearchParams({
     action: "TEMPLATE",
     text: `${WEDDING.names} · ${WEDDING.ceremony}`,
-    dates: "20270115T113000Z/20270115T163000Z", // 5:00–10:00 PM IST
-    details: `${WEDDING.blessing}. ${WEDDING.ceremony} of ${WEDDING.bride} and ${WEDDING.groom}.`,
+    // All-day on purpose: the only time we can promise is the 5:00 PM start.
+    dates: "20270115/20270116",
+    details: `${WEDDING.blessing}. ${WEDDING.ceremony} of ${WEDDING.bride} and ${WEDDING.groom}. Starts at 5:00 PM; the rest of the evening's timings will follow.`,
     location: `${WEDDING.venue}, ${WEDDING.hall}, ${WEDDING.address}`,
   });
   return `https://calendar.google.com/calendar/render?${params.toString()}`;
