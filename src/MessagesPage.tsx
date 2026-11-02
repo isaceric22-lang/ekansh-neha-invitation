@@ -7,16 +7,31 @@ const SF_STACK =
 type Entry =
   | { kind: "date"; text: string }
   | { kind: "text"; side: "sent" | "received"; text: string; tapback?: string }
-  | { kind: "image"; side: "sent" | "received"; src: string };
+  | {
+      kind: "video";
+      side: "sent" | "received";
+      src: string;
+      poster: string;
+      duration: string;
+    };
 
 // "sent" = Ekansh, "received" = Neha. Sample conversation — swap in your own.
+// The clip is its own asset: it is not one of the album's video tiles.
 const THREAD: Entry[] = [
   { kind: "date", text: "Today 9:41" },
   { kind: "text", side: "received", text: "Hey, is the invitation done yet?" },
-  { kind: "text", side: "sent", text: "Done, I made the whole iPhone thing" },
+  { kind: "text", side: "sent", text: "Done. I made the whole iPhone thing" },
   { kind: "text", side: "received", text: "Wow, who thought of that 😳" },
-  { kind: "image", side: "received", src: "/message.jpg" },
-  { kind: "text", side: "received", text: "The wedding sherwani is packed for Friday", tapback: "❤️" },
+  { kind: "text", side: "sent", text: "Watch this before you say anything" },
+  {
+    kind: "video",
+    side: "sent",
+    src: "/videos/reveal.mp4",
+    poster: "/videos/reveal.jpg",
+    duration: "0:06",
+  },
+  { kind: "text", side: "received", text: "Played it three times already 🥹", tapback: "❤️" },
+  { kind: "text", side: "received", text: "The wedding sherwani is packed for Friday" },
   { kind: "text", side: "sent", text: "Perfect. See you at 5" },
 ];
 
@@ -58,17 +73,37 @@ function TextBubble({
   );
 }
 
-function ImageBubble({ side, src }: { side: "sent" | "received"; src: string }) {
+// Plays inline and silently, the way an iMessage video attachment does in a
+// thread; the duration chip sits over the bottom-right corner.
+function VideoBubble({
+  side,
+  src,
+  poster,
+  duration,
+}: {
+  side: "sent" | "received";
+  src: string;
+  poster: string;
+  duration: string;
+}) {
   const sent = side === "sent";
   return (
     <div className={`flex ${sent ? "justify-end" : "justify-start"} mb-1.5`}>
       <div className={`relative max-w-[75%] ${sent ? styles.sentTail : styles.recvTail}`}>
-        <img
+        <video
           src={src}
-          alt="Attachment"
-          draggable={false}
+          poster={poster}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          aria-label="Wedding invitation clip"
           className="relative z-10 block w-[200px] rounded-[18px] object-cover select-none"
         />
+        <span className="absolute bottom-2 right-2 z-20 rounded-full bg-black/55 px-2 py-0.5 text-[10px] font-medium text-white">
+          {duration}
+        </span>
       </div>
     </div>
   );
@@ -134,8 +169,16 @@ export default function MessagesPage({ onBack }: { onBack?: () => void }) {
                 </div>
               );
             }
-            if (e.kind === "image") {
-              return <ImageBubble key={i} side={e.side} src={e.src} />;
+            if (e.kind === "video") {
+              return (
+                <VideoBubble
+                  key={i}
+                  side={e.side}
+                  src={e.src}
+                  poster={e.poster}
+                  duration={e.duration}
+                />
+              );
             }
             return (
               <TextBubble

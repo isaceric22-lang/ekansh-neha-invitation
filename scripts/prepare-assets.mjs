@@ -118,6 +118,7 @@ async function page({
   tone = "cream",
   ink = GOLD,
   quality = 84,
+  outDir = PUBLIC,
   inset = Math.round(Math.min(width, height) * 0.035),
 }) {
   const source = await download(url);
@@ -162,7 +163,7 @@ async function page({
       { input: frame },
     ])
     .jpeg({ quality, mozjpeg: true, chromaSubsampling: "4:2:0" })
-    .toFile(path.join(PUBLIC, file));
+    .toFile(path.join(outDir, file));
   console.log("  ✓", file);
 }
 
@@ -276,26 +277,40 @@ async function prepareGallery() {
 }
 
 /**
- * Short loops for the album: a slow push into a plate, so the video tiles show
- * motion without dropping stock footage into an illustrated set.
+ * Short loops: a slow push into a plate, so moving tiles show motion without
+ * dropping stock footage into an illustrated set. The last clip is built from
+ * a plate that exists only for the Messages attachment, so the chat never
+ * reuses an album tile.
  */
 async function prepareClips() {
   console.log("Clips");
   await mkdir(path.join(PUBLIC, "videos"), { recursive: true });
+  await mkdir(CACHE, { recursive: true });
+  await page({
+    url: ART.couple,
+    file: "reveal-plate.jpg",
+    outDir: CACHE,
+    width: 1200,
+    height: 900,
+    mode: "line",
+    tone: "cream",
+    ink: INK,
+  });
   const clips = [
-    { src: "photos/02.jpg", file: "palki.mp4", height: 900 },
-    { src: "photos/09.jpg", file: "diya.mp4", height: 700 },
-    { src: "photos/13.jpg", file: "henna.mp4", height: 1100 },
+    { input: path.join(PUBLIC, "photos/02.jpg"), file: "palki.mp4", width: 720, height: 900, seconds: 5, rate: 0.00055 },
+    { input: path.join(PUBLIC, "photos/09.jpg"), file: "diya.mp4", width: 720, height: 700, seconds: 5, rate: 0.00055 },
+    { input: path.join(PUBLIC, "photos/13.jpg"), file: "henna.mp4", width: 720, height: 1100, seconds: 5, rate: 0.00055 },
+    { input: path.join(CACHE, "reveal-plate.jpg"), file: "reveal.mp4", width: 720, height: 540, seconds: 6, rate: 0.00032 },
   ];
   for (const clip of clips) {
     const target = path.join(PUBLIC, "videos", clip.file);
     run(FFMPEG, [
       "-y", "-v", "error",
-      "-loop", "1", "-t", "5",
-      "-i", path.join(PUBLIC, clip.src),
+      "-loop", "1", "-t", String(clip.seconds),
+      "-i", clip.input,
       "-vf",
-      `scale=1600:-2,zoompan=z='min(zoom+0.00055,1.12)':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=120:s=720x${clip.height}:fps=24`,
-      "-t", "5",
+      `scale=1600:-2,zoompan=z='min(zoom+${clip.rate},1.12)':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=${clip.seconds * 24}:s=${clip.width}x${clip.height}:fps=24`,
+      "-t", String(clip.seconds),
       "-c:v", "libx264", "-preset", "medium", "-crf", "27",
       "-pix_fmt", "yuv420p", "-movflags", "+faststart",
       target,
@@ -323,8 +338,6 @@ async function prepareWidgets() {
   const inset = 34;
   // Safari widget: the palanquin plate, cropped square.
   await page({ url: ART.palki, file: "reading-list.jpg", width: 1000, height: 1000, mode: "line", tone: "maroon", inset });
-  // Messages attachment: a lit diya plate.
-  await page({ url: ART.diya, file: "message.jpg", width: 900, height: 620, mode: "line", tone: "maroon", inset });
   // Map widget pin: the couple plate, scaled down to a circular crop.
   const mark = await sharp(await recolour(await download(ART.couple), INK))
     .resize({ width: 400, height: 400, fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } })
