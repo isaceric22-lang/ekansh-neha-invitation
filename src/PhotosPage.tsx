@@ -94,19 +94,22 @@ function SearchIcon() {
   );
 }
 
-// Original artwork from Pixabay (see CREDITS.md): painted portraits, flat
-// cartoon figures and gold line-art plates. No photographs and no stock
-// wedding photography. Height is a masonry hint, not the real pixel height.
-const WEDDING_PHOTOS: { file: string; height: number }[] = [
+// Line-art plates drawn from Pixabay sources (see CREDITS.md), plus three
+// slow loops made from the same plates. No photographs and no stock wedding
+// photography. Height is a masonry hint, not the real pixel height.
+const WEDDING_PHOTOS: { file: string; height: number; video?: boolean }[] = [
   { file: "01.jpg", height: 560 },
   { file: "02.jpg", height: 330 },
+  { file: "palki.mp4", height: 300, video: true },
   { file: "03.jpg", height: 560 },
   { file: "04.jpg", height: 440 },
   { file: "05.jpg", height: 330 },
+  { file: "diya.mp4", height: 440, video: true },
   { file: "06.jpg", height: 440 },
   { file: "07.jpg", height: 330 },
   { file: "08.jpg", height: 300 },
   { file: "09.jpg", height: 300 },
+  { file: "henna.mp4", height: 560, video: true },
   { file: "10.jpg", height: 560 },
   { file: "11.jpg", height: 330 },
   { file: "12.jpg", height: 330 },
@@ -138,13 +141,24 @@ export default function PhotosPage() {
 
     if (uploaded.length) return uploaded;
 
-    return WEDDING_PHOTOS.map(({ file, height }) => ({
-      id: file,
-      img: `/photos/${file}`,
-      url: `/photos/${file}`,
-      height,
-      kind: "image" as const,
-    }));
+    return WEDDING_PHOTOS.map(({ file, height, video }) =>
+      video
+        ? {
+            id: file,
+            img: `/videos/${file.replace(/\.mp4$/, ".jpg")}`,
+            url: `/videos/${file}`,
+            poster: `/videos/${file.replace(/\.mp4$/, ".jpg")}`,
+            height,
+            kind: "video" as const,
+          }
+        : {
+            id: file,
+            img: `/photos/${file}`,
+            url: `/photos/${file}`,
+            height,
+            kind: "image" as const,
+          }
+    );
   }, [uploadedPhotos, photoUrls]);
 
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);

@@ -61,19 +61,19 @@ const EVENING = [
       "The baraat arrives to dhol and shehnai; the two families meet, garlands are exchanged and the house fills up.",
   },
   {
-    time: "6:00 PM",
+    time: "TBD",
     title: "Varmala & pheras",
     detail:
       "Jaimala under the marigold mandap, then seven vows around the sacred fire with the whole family watching.",
   },
   {
-    time: "8:30 PM",
+    time: "TBD",
     title: "Dinner",
     detail:
       "A North Indian spread: chaat, kebabs, dal, warm rotis and far too much mithai.",
   },
   {
-    time: "9:30 PM",
+    time: "TBD",
     title: "Portraits & music",
     detail:
       "Family photos by the stage, then the dance floor opens for the cousins.",
@@ -251,9 +251,11 @@ export default function RishtaPage() {
                 >
                   {item.time}
                 </span>
-                <span className="mt-0.5 text-[9px] uppercase tracking-[0.1em]" style={{ color: "#A08472" }}>
-                  IST
-                </span>
+                {item.time !== "TBD" && (
+                  <span className="mt-0.5 text-[9px] uppercase tracking-[0.1em]" style={{ color: "#A08472" }}>
+                    IST
+                  </span>
+                )}
               </div>
 
               <div className="relative flex w-[14px] shrink-0 justify-center">

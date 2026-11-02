@@ -52,12 +52,9 @@ export const DEFAULT_MODAL_SPRING: Transition = {
   mass: 0.9,
 };
 
-const ICON_CROSSFADE_ENTER: Transition = { duration: 0.18, ease: "easeOut" };
-const ICON_CROSSFADE_EXIT: Transition = {
-  duration: 0.12,
-  delay: 0.22,
-  ease: "easeOut",
-};
+// The landing icon fades quickly: held any longer it reads as a stretched
+// icon smeared across the expanding window.
+const ICON_CROSSFADE_ENTER: Transition = { duration: 0.09, ease: "easeOut" };
 const HEADER_EXIT: Transition = { duration: 0.28, ease: "easeOut" };
 const BACKPLATE_EXIT: Transition = { duration: 0.5, ease: "easeOut" };
 const CONTENT_ENTER: Transition = { duration: 0.18, ease: "easeOut" };
@@ -69,10 +66,12 @@ const MODAL_BACKPLATE: MotionProps = {
   exit: { opacity: 0, transition: BACKPLATE_EXIT },
 };
 
+// Never re-appear on the way out: the real home icon is already underneath, so
+// fading it back in made the home icon pop at the end of the collapse.
 const MODAL_ICON_CROSSFADE: MotionProps = {
   initial: { opacity: 1 },
   animate: { opacity: 0 },
-  exit: { opacity: 1, transition: ICON_CROSSFADE_EXIT },
+  exit: { opacity: 0 },
   transition: ICON_CROSSFADE_ENTER,
 };
 
@@ -99,7 +98,7 @@ function modalShell(
     left: origin.x - origin.w / 2,
     width: origin.w,
     height: origin.h,
-    borderRadius: 14,
+    borderRadius: 26,
     opacity: 1,
   };
   return {

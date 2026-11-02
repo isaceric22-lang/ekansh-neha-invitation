@@ -10,7 +10,7 @@ Everything is in English, built for a North Indian wedding on **Friday, 15 Janua
 - **Ganesha unlock ceremony**: a frosted iOS-style card with the idol, "Shree Ganeshaya Namah", the couple's names and the ceremony, shown for about four seconds.
 - **Home screen** with iOS widgets: calendar, venue map, an apps folder and a Safari invitation card.
 - **Safari**: the full invitation page in the browser, with the evening's programme, venue, dress code and add-to-calendar.
-- **Photos**: a masonry album of original illustrations — painted portraits, flat cartoon figures and gold line-art plates. No photography at all, and no real couple photos.
+- **Photos**: a masonry album of line-art plates — a garland exchange, a palanquin, a baraat horse, a mandap, diyas, peacocks — plus three short loops made by slowly pushing into those same plates. No photography at all, and no real couple photos.
 - **YouTube**: a dark, native-feeling YouTube app with a player, progress, like and share, filter chips and a song list. All five songs play through the YouTube IFrame player.
 - **Rishta**: an arranged-marriage match card with the couple, the details, a gunas/stat row and the evening's order.
 - **Calendar, Notes, Messages, Calculator, Settings**: small iOS-style apps with invitation copy. Notes has the invite as a note; Messages has a short thread about the wedding.
@@ -73,7 +73,8 @@ pnpm assets
 ```
 
 This needs `sharp` (already a dev dependency) and network access for the first
-run. No ffmpeg, no video.
+run. The three album loops need ffmpeg; point at a local binary with
+`FFMPEG_PATH`, or install `ffmpeg-static` in `.tools` as this repo does.
 
 ### Uploaded media
 

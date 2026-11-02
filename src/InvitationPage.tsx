@@ -201,7 +201,7 @@ export default function InvitationPage() {
                 Varmala &amp; Pheras
               </h2>
               <span className="text-[10px] uppercase tracking-[0.12em]" style={{ color: "#A0785C" }}>
-                From 6:00 PM
+                Timings TBD
               </span>
             </div>
             <p className="mt-2 text-[12.5px] leading-[1.6]" style={{ color: "#7B6455" }}>
@@ -219,7 +219,7 @@ export default function InvitationPage() {
                 Dinner &amp; dancing
               </h2>
               <span className="text-[10px] uppercase tracking-[0.12em]" style={{ color: "#A0785C" }}>
-                From 8:30 PM
+                Timings TBD
               </span>
             </div>
             <p className="mt-2 text-[12.5px] leading-[1.6]" style={{ color: "#7B6455" }}>
