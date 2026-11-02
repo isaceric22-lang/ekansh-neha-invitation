@@ -219,8 +219,6 @@ const ART = {
     "https://cdn.pixabay.com/photo/2022/09/17/23/12/mandala-7461931_1280.png",
   wreath:
     "https://cdn.pixabay.com/photo/2019/11/07/22/45/watercolour-flowers-4610095_1280.png",
-  ganeshaArt:
-    "https://cdn.pixabay.com/photo/2024/06/10/14/51/ai-generated-8820884_1280.jpg",
   // Gold line-art series: palanquin, baraat horse, ceremony, diya.
   palki:
     "https://cdn.pixabay.com/photo/2022/07/20/10/16/wedding-7333870_1280.png",
