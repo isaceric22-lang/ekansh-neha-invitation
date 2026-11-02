@@ -4,35 +4,42 @@ import styles from "./messages.module.css";
 const SF_STACK =
   '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif';
 
+// Emoji fonts are listed explicitly after the UI font. Without them the
+// numeric-less fallback chain can land on a monochrome symbol face, which is
+// how emoji end up looking like faint line art (or nothing) in the bubbles.
+const EMOJI_STACK =
+  '"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Twemoji Mozilla"';
+
+const TEXT_STACK = `${SF_STACK}, ${EMOJI_STACK}`;
+
 type Entry =
   | { kind: "date"; text: string }
-  | { kind: "text"; side: "sent" | "received"; text: string; tapback?: string }
-  | {
-      kind: "video";
-      side: "sent" | "received";
-      src: string;
-      poster: string;
-      duration: string;
-    };
+  | { kind: "text"; side: "sent" | "received"; text: string; tapback?: string };
 
 // "sent" = Ekansh, "received" = Neha. Sample conversation — swap in your own.
-// The clip is its own asset: it is not one of the album's video tiles.
 const THREAD: Entry[] = [
   { kind: "date", text: "Today 9:41" },
-  { kind: "text", side: "received", text: "Hey, is the invitation done yet?" },
-  { kind: "text", side: "sent", text: "Done. I made the whole iPhone thing" },
-  { kind: "text", side: "received", text: "Wow, who thought of that 😳" },
-  { kind: "text", side: "sent", text: "Watch this before you say anything" },
+  { kind: "text", side: "received", text: "Heyyy, is the invitation done yet? 👀" },
+  { kind: "text", side: "sent", text: "Just finished it. Look 🥰" },
+  { kind: "text", side: "received", text: "Wait… it opens like an actual iPhone 😳" },
+  { kind: "text", side: "sent", text: "That's the whole idea. Swipe up ✨" },
   {
-    kind: "video",
-    side: "sent",
-    src: "/videos/reveal.mp4",
-    poster: "/videos/reveal.jpg",
-    duration: "0:06",
+    kind: "text",
+    side: "received",
+    text: "The photos are so cute, I keep scrolling 😭",
+    tapback: "❤️",
   },
-  { kind: "text", side: "received", text: "Played it three times already 🥹", tapback: "❤️" },
-  { kind: "text", side: "received", text: "The wedding sherwani is packed for Friday" },
-  { kind: "text", side: "sent", text: "Perfect. See you at 5" },
+  { kind: "text", side: "sent", text: "I drew those myself, one by one 🎨" },
+  { kind: "text", side: "received", text: "No way. You're showing off now 😄" },
+  { kind: "text", side: "sent", text: "Only for you 💛" },
+  {
+    kind: "text",
+    side: "received",
+    text: "Three weeks left and I still get butterflies 🙈",
+    tapback: "❤️",
+  },
+  { kind: "text", side: "sent", text: "Same. 15th January, 5 o'clock. Don't be late 😌" },
+  { kind: "text", side: "received", text: "I'll be the one crying at the mandap 🥹" },
 ];
 
 // iOS contact monogram: initials on the system gray gradient (no photo).
@@ -60,50 +67,19 @@ function TextBubble({
               ? `bg-[#0088ff] text-white ${styles.sentTail}`
               : `bg-[#cfd1d4] text-[#333] ${styles.recvTail}`
           }`}
+          style={{ fontFamily: TEXT_STACK }}
         >
           <span className="relative z-10 block">{text}</span>
         </div>
         {tapback && (
-          <span className="absolute -top-3 -right-1 z-20 flex h-[26px] w-[26px] items-center justify-center rounded-full bg-[#cfd1d4] text-[13px] shadow-[0_1px_3px_rgba(0,0,0,0.15)]">
+          <span
+            className="absolute -top-3 -right-1 z-20 flex h-[26px] w-[26px] items-center justify-center rounded-full bg-white text-[13px] leading-none shadow-[0_1px_3px_rgba(0,0,0,0.18)] ring-1 ring-black/5"
+            style={{ fontFamily: TEXT_STACK }}
+            aria-label={`Reacted ${tapback}`}
+          >
             {tapback}
           </span>
         )}
-      </div>
-    </div>
-  );
-}
-
-// Plays inline and silently, the way an iMessage video attachment does in a
-// thread; the duration chip sits over the bottom-right corner.
-function VideoBubble({
-  side,
-  src,
-  poster,
-  duration,
-}: {
-  side: "sent" | "received";
-  src: string;
-  poster: string;
-  duration: string;
-}) {
-  const sent = side === "sent";
-  return (
-    <div className={`flex ${sent ? "justify-end" : "justify-start"} mb-1.5`}>
-      <div className={`relative max-w-[75%] ${sent ? styles.sentTail : styles.recvTail}`}>
-        <video
-          src={src}
-          poster={poster}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          aria-label="Wedding invitation clip"
-          className="relative z-10 block w-[200px] rounded-[18px] object-cover select-none"
-        />
-        <span className="absolute bottom-2 right-2 z-20 rounded-full bg-black/55 px-2 py-0.5 text-[10px] font-medium text-white">
-          {duration}
-        </span>
       </div>
     </div>
   );
@@ -113,7 +89,7 @@ export default function MessagesPage({ onBack }: { onBack?: () => void }) {
   return (
     <div
       className="flex h-full w-full flex-col bg-white"
-      style={{ fontFamily: SF_STACK }}
+      style={{ fontFamily: TEXT_STACK }}
     >
       <div className="mx-auto flex h-full w-full max-w-[430px] flex-col">
         {/* Header */}
@@ -167,17 +143,6 @@ export default function MessagesPage({ onBack }: { onBack?: () => void }) {
                 >
                   {e.text}
                 </div>
-              );
-            }
-            if (e.kind === "video") {
-              return (
-                <VideoBubble
-                  key={i}
-                  side={e.side}
-                  src={e.src}
-                  poster={e.poster}
-                  duration={e.duration}
-                />
               );
             }
             return (

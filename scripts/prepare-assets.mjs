@@ -118,7 +118,6 @@ async function page({
   tone = "cream",
   ink = GOLD,
   quality = 84,
-  outDir = PUBLIC,
   inset = Math.round(Math.min(width, height) * 0.035),
 }) {
   const source = await download(url);
@@ -163,7 +162,7 @@ async function page({
       { input: frame },
     ])
     .jpeg({ quality, mozjpeg: true, chromaSubsampling: "4:2:0" })
-    .toFile(path.join(outDir, file));
+    .toFile(path.join(PUBLIC, file));
   console.log("  ✓", file);
 }
 
@@ -277,30 +276,16 @@ async function prepareGallery() {
 }
 
 /**
- * Short loops: a slow push into a plate, so moving tiles show motion without
- * dropping stock footage into an illustrated set. The last clip is built from
- * a plate that exists only for the Messages attachment, so the chat never
- * reuses an album tile.
+ * Short loops for the album: a slow push into a plate, so the video tiles show
+ * motion without dropping stock footage into an illustrated set.
  */
 async function prepareClips() {
   console.log("Clips");
   await mkdir(path.join(PUBLIC, "videos"), { recursive: true });
-  await mkdir(CACHE, { recursive: true });
-  await page({
-    url: ART.couple,
-    file: "reveal-plate.jpg",
-    outDir: CACHE,
-    width: 1200,
-    height: 900,
-    mode: "line",
-    tone: "cream",
-    ink: INK,
-  });
   const clips = [
     { input: path.join(PUBLIC, "photos/02.jpg"), file: "palki.mp4", width: 720, height: 900, seconds: 5, rate: 0.00055 },
     { input: path.join(PUBLIC, "photos/09.jpg"), file: "diya.mp4", width: 720, height: 700, seconds: 5, rate: 0.00055 },
     { input: path.join(PUBLIC, "photos/13.jpg"), file: "henna.mp4", width: 720, height: 1100, seconds: 5, rate: 0.00055 },
-    { input: path.join(CACHE, "reveal-plate.jpg"), file: "reveal.mp4", width: 720, height: 540, seconds: 6, rate: 0.00032 },
   ];
   for (const clip of clips) {
     const target = path.join(PUBLIC, "videos", clip.file);

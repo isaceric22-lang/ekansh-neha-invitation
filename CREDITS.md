@@ -9,7 +9,7 @@ below are here so the sources stay traceable.
 
 | Files | Pixabay source |
 | --- | --- |
-| `photos/01.jpg`, `profile.jpg`, `og-image.jpg`, `videos/reveal.mp4` | [Bride and groom exchanging a garland](https://pixabay.com/illustrations/wedding-dress-6161116/) |
+| `photos/01.jpg`, `profile.jpg`, `og-image.jpg` | [Bride and groom exchanging a garland](https://pixabay.com/illustrations/wedding-dress-6161116/) |
 | `photos/02.jpg`, `wallpaper-lock.jpg`, `reading-list.jpg`, `videos/palki.mp4` | [Wedding palanquin](https://pixabay.com/illustrations/wedding-7333870/) |
 | `photos/03.jpg` | [Peacock feather](https://pixabay.com/illustrations/peacock-feather-733347/) |
 | `photos/04.jpg` | [Gold mandala](https://pixabay.com/illustrations/mandala-7461931/) |
@@ -30,10 +30,9 @@ composes the final plates: cream paper, gold frames, and single-colour line art
 recoloured to gold or ink, so the whole album reads as one drawn set. All
 processing is local; the site itself has no external image requests.
 
-The clips (`public/videos/`) are made by the same script with ffmpeg: a slow
-push into an existing plate. They are not stock footage, so the motion stays
-inside the illustrations. `reveal.mp4` is built from a plate that exists only
-for the Messages attachment, not from an album tile.
+The three album clips (`public/videos/`) are made by the same script with
+ffmpeg: a slow push into an existing plate. They are not stock footage, so the
+motion stays inside the illustrations.
 
 ## Music
 
