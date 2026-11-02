@@ -115,10 +115,10 @@ export default function InvitationPage() {
           className="mx-auto mt-5 max-w-[300px] text-[24px] leading-[1.32]"
           style={{ fontFamily: SERIF, color: MAROON }}
         >
-          Please join us for the Tilak and the Godh Bharai.
+          Please join us for our wedding.
         </p>
         <p className="mx-auto mt-3 max-w-[290px] text-[12.5px] leading-[1.65]" style={{ color: "#7B6455" }}>
-          Two families, one auspicious evening. Come for the rituals, the
+          Two families, one auspicious evening. Come for the vows, the
           marigolds and the mithai, and leave with our blessings.
         </p>
         <p className="mt-4 text-[10px] uppercase tracking-[0.2em]" style={{ color: "#A0785C" }}>
@@ -139,7 +139,7 @@ export default function InvitationPage() {
             <br />
             {WEDDING.hall}
           </Detail>
-          <Detail label="Nearest metro">Jhil Mil</Detail>
+          <Detail label="Nearest metro">Wazirpur</Detail>
         </div>
 
         <div className="my-5 h-px w-full" style={{ background: "rgba(74,18,35,0.08)" }} />
@@ -180,15 +180,15 @@ export default function InvitationPage() {
           >
             <div className="flex items-baseline justify-between gap-3">
               <h2 className="text-[21px]" style={{ fontFamily: SERIF, color: MAROON }}>
-                Tilak
+                Baraat &amp; Milni
               </h2>
               <span className="text-[10px] uppercase tracking-[0.12em]" style={{ color: "#A0785C" }}>
-                From 7:00 PM
+                From 5:00 PM
               </span>
             </div>
             <p className="mt-2 text-[12.5px] leading-[1.6]" style={{ color: "#7B6455" }}>
-              The groom's family applies the tilak and offers their blessings:
-              the formal seal on the match, celebrated with the whole family.
+              The baraat arrives to dhol and shehnai. The two families meet at
+              the gate, garlands are exchanged, and the celebration begins.
             </p>
           </div>
 
@@ -198,16 +198,33 @@ export default function InvitationPage() {
           >
             <div className="flex items-baseline justify-between gap-3">
               <h2 className="text-[21px]" style={{ fontFamily: SERIF, color: MAROON }}>
-                Godh Bharai
+                Varmala &amp; Pheras
               </h2>
               <span className="text-[10px] uppercase tracking-[0.12em]" style={{ color: "#A0785C" }}>
-                From 7:00 PM
+                From 6:00 PM
               </span>
             </div>
             <p className="mt-2 text-[12.5px] leading-[1.6]" style={{ color: "#7B6455" }}>
-              The women of the family fill the lap with gifts, sweets and
-              blessings for the bride's new beginning: songs, laughter and a
-              little happy chaos.
+              Under a marigold mandap the couple exchange garlands, then walk
+              seven rounds of the sacred fire as the evening settles in.
+            </p>
+          </div>
+
+          <div
+            className="rounded-[18px] border p-4"
+            style={{ borderColor: "rgba(201,154,74,0.35)", background: "#FFFDF8" }}
+          >
+            <div className="flex items-baseline justify-between gap-3">
+              <h2 className="text-[21px]" style={{ fontFamily: SERIF, color: MAROON }}>
+                Dinner &amp; dancing
+              </h2>
+              <span className="text-[10px] uppercase tracking-[0.12em]" style={{ color: "#A0785C" }}>
+                From 8:30 PM
+              </span>
+            </div>
+            <p className="mt-2 text-[12.5px] leading-[1.6]" style={{ color: "#7B6455" }}>
+              A North Indian spread of chaat, kebabs, dal and warm rotis,
+              followed by the dance floor and far too much mithai.
             </p>
           </div>
         </div>
@@ -220,8 +237,8 @@ export default function InvitationPage() {
         </p>
         <ul className="mt-3 space-y-2 text-[12.5px] leading-snug" style={{ color: "#6E5545" }}>
           <li>· Indian festive: lehenga, sherwani, or your finest silk.</li>
-          <li>· The venue is behind Jhil Mil metro station; parking is limited.</li>
-          <li>· Carry a little warmth. Delhi gets cool after sunset in November.</li>
+          <li>· The banquet is on Mahatma Gandhi Road, Ashok Vihar; parking is limited.</li>
+          <li>· Carry a little warmth. Delhi gets cold after sunset in January.</li>
         </ul>
       </div>
 
@@ -240,7 +257,7 @@ export default function InvitationPage() {
         <p className="mt-6 text-[11px] leading-relaxed" style={{ color: "#9B8270" }}>
           {WEDDING.blessing}
           <br />
-          {WEDDING.names} · 19 November 2026
+          {WEDDING.names} · {WEDDING.dateShort}
         </p>
       </div>
     </div>

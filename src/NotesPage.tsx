@@ -252,12 +252,12 @@ export default function NotesPage() {
         style={{ color: GLYPH }}
       >
         <h1 className="text-[28px] font-bold leading-tight tracking-tight">
-          Tilak &amp; Godh Bharai · Ekansh &amp; Neha
+          Wedding · Ekansh &amp; Neha
         </h1>
 
         <p className="mt-3">
           With the blessings of Lord Ganesha, we cordially invite you and your family to
-          our Tilak and Godh Bharai, an evening of rituals, marigolds and mithai.
+          our wedding, an evening of vows, marigolds and mithai.
         </p>
 
         <div className="mt-4 space-y-1.5">
@@ -272,7 +272,7 @@ export default function NotesPage() {
               className="underline-offset-2 active:opacity-60"
               style={{ color: LINK }}
             >
-              View engagement venue on Google Maps
+              View wedding venue on Google Maps
             </button>
           </p>
           <p>👗 Indian festive: lehenga, sherwani, or your finest silk</p>
@@ -280,7 +280,7 @@ export default function NotesPage() {
         </div>
 
         <p className="mt-5">
-          We would be delighted to celebrate with you. Come for the rituals, stay for
+          We would be delighted to celebrate with you. Come for the vows, stay for
           the mithai. ❤️
         </p>
 

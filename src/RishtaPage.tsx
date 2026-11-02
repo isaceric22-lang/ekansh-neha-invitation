@@ -55,16 +55,16 @@ function SectionTitle({ children, note }: { children: string; note?: string }) {
 /** How the evening unfolds — useful for guests, no invented family to-dos. */
 const EVENING = [
   {
-    time: "7:00 PM",
-    title: "Tilak & welcome",
+    time: "5:00 PM",
+    title: "Baraat & milni",
     detail:
-      "The groom's family applies the tilak and offers their blessings, with dhol, shehnai and a very full house.",
+      "The baraat arrives to dhol and shehnai; the two families meet, garlands are exchanged and the house fills up.",
   },
   {
-    time: "7:45 PM",
-    title: "Godh Bharai",
+    time: "6:00 PM",
+    title: "Varmala & pheras",
     detail:
-      "The women of the family fill the bride's lap with gifts, sweets and blessings: songs, laughter and a little happy chaos.",
+      "Jaimala under the marigold mandap, then seven vows around the sacred fire with the whole family watching.",
   },
   {
     time: "8:30 PM",
@@ -118,12 +118,12 @@ export default function RishtaPage() {
         </h1>
         <p className="mt-3 max-w-[280px] text-[13px] leading-[1.5] text-white/70">
           Two families introduced us. We took it from there. Everything the
-          family needs for {WEDDING.ceremony}, in one place.
+          family needs for the wedding, in one place.
         </p>
         <div className="mt-5 flex items-center gap-2 text-[11px] uppercase tracking-[0.16em]" style={{ color: GOLD_LIGHT }}>
           <span>{WEDDING.names}</span>
           <span className="h-px w-8" style={{ background: GOLD }} />
-          <span>19 · 11 · 2026</span>
+          <span>15 · 01 · 2027</span>
         </div>
       </header>
 
@@ -237,7 +237,7 @@ export default function RishtaPage() {
 
       {/* The evening */}
       <section className="mx-4 mt-7">
-        <SectionTitle note="19 Nov">The evening, in order</SectionTitle>
+        <SectionTitle note="15 Jan">The evening, in order</SectionTitle>
         <div
           className="rounded-[18px] px-4 py-4"
           style={{ background: "#FFFDF8", border: "1px solid rgba(201,154,74,0.28)" }}
@@ -302,8 +302,8 @@ export default function RishtaPage() {
             Arranged by our families. Chosen by us.
           </p>
           <p className="mt-3 text-[12px] leading-relaxed" style={{ color: "#7A5A48" }}>
-            We would be so happy to have you with us in Delhi for the Tilak and
-            the Godh Bharai. Come for the rituals, stay for the mithai.
+            We would be so happy to have you with us in Delhi for our wedding.
+            Come for the vows, stay for the mithai.
           </p>
           <div className="mt-4 flex items-center justify-center gap-2 text-[10px] uppercase tracking-[0.2em]" style={{ color: "#8A6A58" }}>
             <span className="h-px w-6" style={{ background: GOLD }} />

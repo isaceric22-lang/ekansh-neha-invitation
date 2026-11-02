@@ -1,35 +1,40 @@
 # Credits
 
-## Photography and video
+## Artwork
 
-All photographs and video clips are from [Pexels](https://www.pexels.com/license/), free to use without attribution. They were chosen to evoke a North Indian wedding without showing the couple's faces and without using any real photographs of the couple.
+Every image in this invitation is **illustration or digital painting**, not a
+photograph. The sources are from [Pixabay](https://pixabay.com/service/license-summary/),
+whose content licence allows free commercial use without attribution. The links
+below are here so the sources stay traceable.
 
-| Files | Pexels photo |
+| Files | Pixabay source |
 | --- | --- |
-| `wallpaper-lock.jpg`, `photos/01.jpg`, `og-image.jpg` | [39083731](https://www.pexels.com/photo/39083731/) |
-| `photos/02.jpg` | [2583902](https://www.pexels.com/photo/2583902/) |
-| `photos/03.jpg` | [29998307](https://www.pexels.com/photo/29998307/) |
-| `photos/04.jpg` | [31002035](https://www.pexels.com/photo/31002035/) |
-| `photos/05.jpg`, `wallpaper-home.jpg` | [8887298](https://www.pexels.com/photo/8887298/) |
-| `photos/06.jpg` | [8818664](https://www.pexels.com/photo/8818664/) |
-| `photos/07.jpg`, `profile.jpg` | [18016520](https://www.pexels.com/photo/18016520/) |
-| `photos/08.jpg` | [39820649](https://www.pexels.com/photo/39820649/) |
-| `photos/09.jpg` | [13032900](https://www.pexels.com/photo/13032900/) |
-| `photos/10.jpg`, `ganesha.jpg` | [33350745](https://www.pexels.com/photo/33350745/) |
-| `photos/11.jpg` | [18098651](https://www.pexels.com/photo/18098651/) |
-| `photos/12.jpg` | [28886325](https://www.pexels.com/photo/28886325/) |
-| `photos/13.jpg` | [10143686](https://www.pexels.com/photo/10143686/) |
-| `photos/14.jpg` | [13146927](https://www.pexels.com/photo/13146927/) |
-| `reading-list.jpg` | [39820649](https://www.pexels.com/photo/39820649/) |
-| `message.jpg` | [8819214](https://www.pexels.com/photo/8819214/) |
+| `photos/01.jpg`, `profile.jpg`, `og-image.jpg` | [Painted couple](https://pixabay.com/illustrations/ai-generated-8345929/) |
+| `photos/02.jpg`, `wallpaper-lock.jpg`, `reading-list.jpg` | [Wedding palanquin, gold line art](https://pixabay.com/illustrations/wedding-7333870/) |
+| `photos/03.jpg` | [Bride with a lotus, flat cartoon](https://pixabay.com/illustrations/bride-6226692/) |
+| `photos/04.jpg` | [Gold mandala](https://pixabay.com/illustrations/mandala-7461931/) |
+| `photos/05.jpg` | [Watercolour flower wreath](https://pixabay.com/illustrations/watercolour-flowers-4610095/) |
+| `photos/06.jpg` | [Wedding ceremony, line art](https://pixabay.com/illustrations/traditional-wedding-ceremony-6161131/) |
+| `photos/07.jpg` | [Baraat horse and rider, line art](https://pixabay.com/illustrations/horse-7333877/) |
+| `photos/08.jpg` | [Dhol player, flat cartoon](https://pixabay.com/illustrations/musical-man-1932271/) |
+| `photos/09.jpg`, `message.jpg` | [Diya and lotus, gold line art](https://pixabay.com/illustrations/diya-7333876/) |
+| `photos/10.jpg` | [Ganesha, line art](https://pixabay.com/illustrations/divinity-3335905/) |
+| `photos/11.jpg` | [Peacock feather, line art](https://pixabay.com/illustrations/peacock-feather-5829502/) |
+| `photos/12.jpg` | [Mehndi hand](https://pixabay.com/illustrations/henna-7954168/) |
+| `photos/13.jpg`, `wallpaper-home.jpg` | [Henna flower, line art](https://pixabay.com/illustrations/henna-181795/) |
+| `photos/14.jpg` | [Bride and groom, flat cartoon](https://pixabay.com/illustrations/groom-6496931/) |
+| `ganesha.jpg`, `icon-*.png`, `favicon-*.png` | [Ganesha mark](https://pixabay.com/illustrations/ganesha-161002/) |
 
-Video clips (Pexels videos): `hands.mp4` (27180421), `mehndi.mp4` (15455199), `diyas.mp4` (11758612). Posters are extracted from the clips.
-
-The source images are downloaded and cropped by `scripts/prepare-assets.mjs`. Attribution is not required by the Pexels license, but the links are here so the sources stay traceable.
+`scripts/prepare-assets.mjs` downloads each source once into `.tools/art` and
+composes the final plates: cream paper, gold frames, and single-colour line art
+recoloured to gold or ink, so the whole album reads as one illustrated set. All
+processing is local; the site itself has no external image requests.
 
 ## Music
 
-The songs stream through the YouTube IFrame player. Nothing is re-hosted here, so the artists and labels keep their plays. Videos are chosen so that embedding is allowed.
+The songs stream through the YouTube IFrame player. Nothing is re-hosted here, so
+the artists and labels keep their plays. Videos are chosen so that embedding is
+allowed.
 
 ## Code
 

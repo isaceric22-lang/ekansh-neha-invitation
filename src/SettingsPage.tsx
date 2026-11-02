@@ -266,7 +266,7 @@ export default function SettingsPage() {
               Ekansh &amp; Neha
             </div>
             <div className="mt-0.5 text-[14px]" style={{ color: GRAY }}>
-              Tilak &amp; Godh Bharai · 19 November 2026
+              Wedding · 15 January 2027
             </div>
           </div>
           <Chevron />

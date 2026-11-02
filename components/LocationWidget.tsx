@@ -12,7 +12,7 @@ interface LocationWidgetProps {
 
 export function LocationWidget({
   street = ENGAGEMENT_VENUE,
-  address = "Imperia Hall · Jhil Mil, Delhi",
+  address = "Banquet Hall · Ashok Vihar, Delhi",
   photoSrc = "/profile.jpg",
   mapSrc = "/map-tile.svg",
   href,

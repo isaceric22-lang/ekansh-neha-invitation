@@ -23,9 +23,9 @@ export const CALENDAR_DAY = WEDDING.day;
 /** Full date line shown on the event-detail screen. */
 export const CALENDAR_DATE = WEDDING.dateLong;
 /** Back-button label — the event's day. */
-export const CALENDAR_BACK_LABEL = "19 Nov";
+export const CALENDAR_BACK_LABEL = "15 Jan";
 /** Name of the calendar these events live in (shown in the "Calendar" row). */
-export const CALENDAR_NAME = "Engagement";
+export const CALENDAR_NAME = "Wedding";
 
 export const ENGAGEMENT_DATE = WEDDING.dateLong;
 export const ENGAGEMENT_DATE_LONG = WEDDING.dateLong;

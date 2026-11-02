@@ -6,37 +6,37 @@ export const WEDDING = {
   bride: "Neha",
   groom: "Ekansh",
   names: "Ekansh & Neha",
-  ceremony: "Tilak & Godh Bharai",
-  dateLong: "Thursday, 19 November 2026",
-  dateShort: "19 November 2026",
-  weekday: "Thursday",
-  day: "19",
-  month: "November",
-  time: "7:00 PM onwards",
+  ceremony: "Wedding",
+  dateLong: "Friday, 15 January 2027",
+  dateShort: "15 January 2027",
+  weekday: "Friday",
+  day: "15",
+  month: "January",
+  time: "5:00 PM onwards",
   /** ISO date with the Delhi offset, used for add-to-calendar links. */
-  startISO: "2026-11-19T19:00:00+05:30",
-  endISO: "2026-11-19T22:30:00+05:30",
-  venue: "The SK Wedding Bells",
-  hall: "Imperia Hall",
+  startISO: "2027-01-15T17:00:00+05:30",
+  endISO: "2027-01-15T22:00:00+05:30",
+  venue: "The Grandeur by Lavanya",
+  hall: "Banquet Hall",
   address:
-    "B-17, Part 1, Jhil Mil Industrial Area, behind Jhil Mil Metro Station, Delhi 110095",
+    "A-15, Mahatma Gandhi Rd, Block A, Wazirpur Industrial Area, Ashok Vihar, Delhi, 110052",
   hosts: "Mr. Shyam Behari & Mrs. Deepmalika",
   hashtag: "#EkanshAndNeha",
   blessing: "With the blessings of Lord Ganesha",
 } as const;
 
 export const MAPS_URL =
-  "https://www.google.com/maps/search/?api=1&query=The+SK+Wedding+Bells%2C+Imperia+Hall%2C+Jhil+Mil+Industrial+Area%2C+Delhi+110095";
+  "https://www.google.com/maps/search/?api=1&query=The+Grandeur+by+Lavanya+banquet%2C+A-15%2C+Mahatma+Gandhi+Rd%2C+Wazirpur+Industrial+Area%2C+Ashok+Vihar%2C+Delhi+110052";
 
 export const VENUE_MAP_EMBED =
-  "https://maps.google.com/maps?q=The%20SK%20Wedding%20Bells%2C%20Jhil%20Mil%2C%20Delhi&t=&z=14&ie=UTF8&iwloc=&output=embed";
+  "https://maps.google.com/maps?q=The%20Grandeur%20by%20Lavanya%20banquet%2C%20Ashok%20Vihar%2C%20Delhi&t=&z=15&ie=UTF8&iwloc=&output=embed";
 
 /** A calendar download that works without any backend. */
 export function googleCalendarUrl() {
   const params = new URLSearchParams({
     action: "TEMPLATE",
     text: `${WEDDING.names} · ${WEDDING.ceremony}`,
-    dates: "20261119T133000Z/20261119T170000Z", // 7:00–10:30 PM IST
+    dates: "20270115T113000Z/20270115T163000Z", // 5:00–10:00 PM IST
     details: `${WEDDING.blessing}. ${WEDDING.ceremony} of ${WEDDING.bride} and ${WEDDING.groom}.`,
     location: `${WEDDING.venue}, ${WEDDING.hall}, ${WEDDING.address}`,
   });

@@ -101,7 +101,7 @@ export default function SafariPage() {
     const url = window.location.href;
     try {
       if (navigator.share) {
-        await navigator.share({ title: "Ekansh & Neha · Tilak & Godh Bharai", url });
+        await navigator.share({ title: "Ekansh & Neha · Wedding", url });
       } else {
         await navigator.clipboard.writeText(url);
         setShared(true);

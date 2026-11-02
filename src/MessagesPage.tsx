@@ -16,8 +16,8 @@ const THREAD: Entry[] = [
   { kind: "text", side: "sent", text: "Done, I made the whole iPhone thing" },
   { kind: "text", side: "received", text: "Wow, who thought of that 😳" },
   { kind: "image", side: "received", src: "/message.jpg" },
-  { kind: "text", side: "received", text: "The Tilak thali is packed for Thursday", tapback: "❤️" },
-  { kind: "text", side: "sent", text: "Perfect. See you at 7" },
+  { kind: "text", side: "received", text: "The wedding sherwani is packed for Friday", tapback: "❤️" },
+  { kind: "text", side: "sent", text: "Perfect. See you at 5" },
 ];
 
 // iOS contact monogram: initials on the system gray gradient (no photo).

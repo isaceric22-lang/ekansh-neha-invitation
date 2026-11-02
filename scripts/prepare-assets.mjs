@@ -1,137 +1,321 @@
 /**
- * Fetches and prepares the stock photography and video used by the invitation.
+ * Fetches and prepares the artwork used by the invitation.
  *
- * Source: Pexels (https://www.pexels.com/license/) — free to use, no attribution
- * required. Downloads are cached in `.tools/stock`; the processed files in
- * `public/` are committed, so Vercel never needs this script.
+ * Source: Pixabay (https://pixabay.com/service/license-summary/) — free for
+ * commercial use, no attribution required. Every file is a vector illustration
+ * or digital painting, never a photograph, so the album looks illustrated
+ * rather than stocked.
+ *
+ * Downloads are cached in `.tools/art`; the processed files in `public/` are
+ * committed, so Vercel never needs this script.
  *
  *   pnpm run assets
- *
- * Videos need ffmpeg. Set FFMPEG_PATH, or install ffmpeg-static in `.tools`.
  */
 import { existsSync } from "node:fs";
-import { spawnSync } from "node:child_process";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import sharp from "sharp";
 
 const ROOT = path.resolve(import.meta.dirname, "..");
 const PUBLIC = path.join(ROOT, "public");
-const CACHE = path.join(ROOT, ".tools", "stock");
-const FULL = path.join(CACHE, "full");
+const CACHE = path.join(ROOT, ".tools", "art");
 
-const FFMPEG =
-  process.env.FFMPEG_PATH ??
-  [
-    path.join(ROOT, ".tools", "ffmpeg", "node_modules", "ffmpeg-static", "ffmpeg.exe"),
-    path.join(ROOT, ".tools", "ffmpeg", "node_modules", "ffmpeg-static", "ffmpeg"),
-  ].find((candidate) => existsSync(candidate)) ??
-  "ffmpeg";
+const CREAM = "#FBF3E5";
+const CREAM_DEEP = "#F3E4CB";
+const MAROON = "#4A1223";
+const PLUM = "#2B0A14";
+const GOLD = "#C99A4A";
+const GOLD_LIGHT = "#E8C173";
+const INK = "#3B1022";
 
-async function fetchPhoto(id) {
-  const file = path.join(FULL, `${id}.jpg`);
+async function download(url) {
+  const file = path.join(CACHE, path.basename(new URL(url).pathname));
   if (existsSync(file)) return file;
-  const url = `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=2000`;
-  const response = await fetch(url);
-  if (!response.ok) throw new Error(`Photo ${id}: HTTP ${response.status}`);
+  const response = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0" } });
+  if (!response.ok) throw new Error(`${url}: HTTP ${response.status}`);
+  await mkdir(CACHE, { recursive: true });
   await writeFile(file, Buffer.from(await response.arrayBuffer()));
   return file;
 }
 
-async function fetchVideo(id) {
-  const file = path.join(CACHE, "videos", `${id}.mp4`);
-  if (existsSync(file)) return file;
-  await mkdir(path.dirname(file), { recursive: true });
-  const response = await fetch(`https://www.pexels.com/download/video/${id}/`, {
-    headers: { "User-Agent": "Mozilla/5.0" },
-    redirect: "follow",
-  });
-  if (!response.ok) throw new Error(`Video ${id}: HTTP ${response.status}`);
-  await writeFile(file, Buffer.from(await response.arrayBuffer()));
-  return file;
+/**
+ * Turns line art on white (or on transparency) into a single-colour plate:
+ * alpha comes from the ink, so the drawing can sit on cream or maroon.
+ */
+async function recolour(source, ink) {
+  const meta = await sharp(source).metadata();
+  const { data, info } = await sharp(source)
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  const [r, g, b] = [1, 3, 5].map((i) => parseInt(ink.slice(i, i + 2), 16));
+  const out = Buffer.alloc(info.width * info.height * 4);
+  for (let i = 0; i < data.length; i += 4) {
+    // Distance from white along the darkest channel keeps coloured inks
+    // (gold, blue) as strong as black ones.
+    const inkAlpha = 255 - Math.min(data[i], data[i + 1], data[i + 2]);
+    const base = meta.hasAlpha ? data[i + 3] : 255;
+    const alpha = Math.min(255, Math.round(((base * inkAlpha) / 255) * 1.45));
+    out[i] = r;
+    out[i + 1] = g;
+    out[i + 2] = b;
+    out[i + 3] = alpha;
+  }
+  return sharp(out, { raw: { width: info.width, height: info.height, channels: 4 } })
+    .png()
+    .toBuffer();
 }
 
-function run(command, args) {
-  const result = spawnSync(command, args, { stdio: "inherit" });
-  if (result.status !== 0) throw new Error(`Command failed: ${command}`);
+/** Paper + frame the artwork sits on. Every page reads like an album plate. */
+function plateSvg(w, h, tone) {
+  const dark = tone === "maroon";
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}">
+    <defs>
+      <linearGradient id="p" x1="0" y1="0" x2="0.3" y2="1">
+        ${
+          dark
+            ? `<stop offset="0" stop-color="#5B1830"/><stop offset=".55" stop-color="${MAROON}"/><stop offset="1" stop-color="${PLUM}"/>`
+            : `<stop offset="0" stop-color="#FDF9F0"/><stop offset=".6" stop-color="${CREAM}"/><stop offset="1" stop-color="${CREAM_DEEP}"/>`
+        }
+      </linearGradient>
+      <radialGradient id="g" cx="50%" cy="38%" r="72%">
+        <stop offset="0" stop-color="${GOLD_LIGHT}" stop-opacity="${dark ? 0.14 : 0.18}"/>
+        <stop offset="1" stop-color="${GOLD_LIGHT}" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <rect width="${w}" height="${h}" fill="url(#p)"/>
+    <rect width="${w}" height="${h}" fill="url(#g)"/>
+  </svg>`;
 }
 
-/** The gallery. Each entry is cropped to a fixed shape for a balanced masonry. */
-const GALLERY = [
-  // North Indian bridal back view: long maroon dupatta, choora and kaleere.
-  { id: "39083731", file: "01.jpg", crop: [1200, 1600] },
-  { id: "2583902", file: "02.jpg", crop: [1200, 900] },
-  { id: "29998307", file: "03.jpg", crop: [1200, 1600] },
-  { id: "31002035", file: "04.jpg", crop: [1000, 1000] },
-  { id: "8887298", file: "05.jpg", crop: [1200, 900] },
-  { id: "8818664", file: "06.jpg", crop: [1000, 1000] },
-  { id: "18016520", file: "07.jpg", crop: [1200, 900] },
-  { id: "39820649", file: "08.jpg", crop: [1200, 800] },
-  { id: "13032900", file: "09.jpg", crop: [1200, 800] },
-  { id: "33350745", file: "10.jpg", crop: [1200, 1600] },
-  // Interlocked hands with mehndi and a sherwani cuff — no faces.
-  { id: "18098651", file: "11.jpg", crop: [1200, 900] },
-  { id: "28886325", file: "12.jpg", crop: [1200, 900] },
-  { id: "10143686", file: "13.jpg", crop: [1200, 800] },
-  // The couple from behind at a North Indian ceremony — no faces, all ritual.
-  { id: "13146927", file: "14.jpg", crop: [1200, 1600] },
-];
+function frameSvg(w, h, inset, dark) {
+  const line = dark ? GOLD : "rgba(201,154,74,0.55)";
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}">
+    <rect x="${inset}" y="${inset}" width="${w - inset * 2}" height="${h - inset * 2}"
+      fill="none" stroke="${line}" stroke-width="1.6" opacity="0.8"/>
+    <rect x="${inset + 7}" y="${inset + 7}" width="${w - inset * 2 - 14}" height="${h - inset * 2 - 14}"
+      fill="none" stroke="${line}" stroke-width="0.7" opacity="0.45"/>
+  </svg>`;
+}
 
-async function cropPhoto(id, size, file, { quality = 82, position = "centre" } = {}) {
-  const source = await fetchPhoto(id);
-  await sharp(source)
-    .rotate()
-    .resize({ width: size[0], height: size[1], fit: "cover", position })
+/**
+ * One gallery page.
+ *  mode "print": a full-bleed illustration inside a cream margin.
+ *  mode "line":  single-colour line art centred on a cream or maroon plate.
+ */
+async function page({
+  url,
+  file,
+  width,
+  height,
+  mode,
+  tone = "cream",
+  ink = GOLD,
+  quality = 84,
+  inset = Math.round(Math.min(width, height) * 0.035),
+}) {
+  const source = await download(url);
+  const frame = Buffer.from(frameSvg(width, height, inset, tone === "maroon"));
+
+  let art;
+  let left;
+  let top;
+  if (mode === "fit") {
+    const box = Math.round(Math.min(width, height) * 0.9);
+    art = await sharp(source)
+      .rotate()
+      .modulate({ saturation: 1.25 })
+      .resize({ width: box, height: box, fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } })
+      .toBuffer();
+    const meta = await sharp(art).metadata();
+    left = Math.round((width - meta.width) / 2);
+    top = Math.round((height - meta.height) / 2);
+  } else if (mode === "print") {
+    const plateW = width - inset * 2;
+    const plateH = height - inset * 2;
+    art = await sharp(source)
+      .rotate()
+      .resize({ width: plateW, height: plateH, fit: "cover", position: "attention" })
+      .toBuffer();
+    left = inset;
+    top = inset;
+  } else {
+    const box = Math.min(width, height) - inset * 2 - Math.round(Math.min(width, height) * 0.14);
+    art = await sharp(await recolour(source, ink))
+      .resize({ width: box, height: box, fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } })
+      .toBuffer();
+    const meta = await sharp(art).metadata();
+    left = Math.round((width - meta.width) / 2);
+    top = Math.round((height - meta.height) / 2);
+  }
+
+  const base = await sharp(Buffer.from(plateSvg(width, height, tone))).png().toBuffer();
+  await sharp(base)
+    .composite([
+      { input: art, left, top },
+      { input: frame },
+    ])
     .jpeg({ quality, mozjpeg: true, chromaSubsampling: "4:2:0" })
     .toFile(path.join(PUBLIC, file));
   console.log("  ✓", file);
 }
 
-async function preparePhotos() {
-  console.log("Gallery");
+/** A tall wallpaper: gradient, oversized motif, vignette. */
+async function wallpaper({ url, file, tone = "maroon", ink = GOLD, brightness = 0.86, blur = 0, scale = 0.78, y = 0.5 }) {
+  const w = 1170;
+  const h = 2532;
+  const source = await download(url);
+  const art = await sharp(await recolour(source, ink))
+    .resize({ width: Math.round(w * scale), height: Math.round(w * scale), fit: "inside" })
+    .toBuffer();
+  let layer = art;
+  const scaled = await sharp(layer).metadata();
+  if (scaled.width > w || scaled.height > h) {
+    // Oversized motifs are cropped to the frame instead of shrunk.
+    const cropW = Math.min(scaled.width, w);
+    const cropH = Math.min(scaled.height, h);
+    layer = await sharp(layer)
+      .extract({
+        left: Math.round((scaled.width - cropW) / 2),
+        top: Math.max(0, Math.round((scaled.height - cropH) * y)),
+        width: cropW,
+        height: cropH,
+      })
+      .toBuffer();
+  }
+  if (blur) layer = await sharp(layer).blur(blur).toBuffer();
+  const meta = await sharp(layer).metadata();
+  const vignette = Buffer.from(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}">
+       <defs><radialGradient id="v" cx="50%" cy="42%" r="78%">
+         <stop offset="0" stop-color="#000" stop-opacity="0"/>
+         <stop offset=".62" stop-color="#000" stop-opacity="0.18"/>
+         <stop offset="1" stop-color="#000" stop-opacity="0.62"/>
+       </radialGradient></defs>
+       <rect width="${w}" height="${h}" fill="url(#v)"/>
+     </svg>`
+  );
+  await sharp(Buffer.from(plateSvg(w, h, tone)))
+    .composite([
+      { input: layer, left: Math.round((w - meta.width) / 2), top: Math.round((h - meta.height) * y), blend: "over" },
+      { input: vignette },
+    ])
+    .modulate({ brightness })
+    .jpeg({ quality: 78, mozjpeg: true })
+    .toFile(path.join(PUBLIC, file));
+  console.log("  ✓", file);
+}
+
+const ART = {
+  couple:
+    "https://cdn.pixabay.com/photo/2023/10/27/18/00/ai-generated-8345929_1280.jpg",
+  cartoonCouple:
+    "https://cdn.pixabay.com/photo/2021/07/27/13/59/groom-6496931_1280.png",
+  bride:
+    "https://cdn.pixabay.com/photo/2021/05/03/16/13/bride-6226692_1280.jpg",
+  dhol:
+    "https://cdn.pixabay.com/photo/2016/12/26/14/30/musical-man-1932271_1280.png",
+  mandala:
+    "https://cdn.pixabay.com/photo/2022/09/17/23/12/mandala-7461931_1280.png",
+  wreath:
+    "https://cdn.pixabay.com/photo/2019/11/07/22/45/watercolour-flowers-4610095_1280.png",
+  ganeshaArt:
+    "https://cdn.pixabay.com/photo/2024/06/10/14/51/ai-generated-8820884_1280.jpg",
+  // Gold line-art series: palanquin, baraat horse, ceremony, diya.
+  palki:
+    "https://cdn.pixabay.com/photo/2022/07/20/10/16/wedding-7333870_1280.png",
+  horse:
+    "https://cdn.pixabay.com/photo/2022/07/20/10/17/horse-7333877_1280.png",
+  ceremony:
+    "https://cdn.pixabay.com/photo/2021/04/08/09/23/traditional-wedding-ceremony-6161131_1280.png",
+  diya:
+    "https://cdn.pixabay.com/photo/2022/07/20/10/17/diya-7333876_1280.png",
+  // Black ink ornaments, recoloured to suit the plate.
+  peacock:
+    "https://cdn.pixabay.com/photo/2020/12/13/22/06/peacock-feather-5829502_1280.png",
+  mehndi:
+    "https://cdn.pixabay.com/photo/2023/04/27/09/57/henna-7954168_1280.png",
+  henna:
+    "https://cdn.pixabay.com/photo/2013/09/12/21/37/henna-181795_1280.png",
+  ganeshaLine:
+    "https://cdn.pixabay.com/photo/2018/04/20/12/45/divinity-3335905_1280.png",
+  ganeshaMark:
+    "https://cdn.pixabay.com/photo/2013/07/13/13/25/ganesha-161002_1280.png",
+};
+
+/** The album, in order. Heights are masonry hints, not real pixel heights. */
+const GALLERY = [
+  { art: "couple", file: "01.jpg", width: 1200, height: 1600, mode: "print" },
+  { art: "palki", file: "02.jpg", width: 1200, height: 900, mode: "line", tone: "cream", ink: INK },
+  { art: "bride", file: "03.jpg", width: 1200, height: 1600, mode: "print" },
+  { art: "mandala", file: "04.jpg", width: 1000, height: 1000, mode: "print" },
+  { art: "wreath", file: "05.jpg", width: 1200, height: 900, mode: "fit" },
+  { art: "ceremony", file: "06.jpg", width: 1000, height: 1000, mode: "line", tone: "cream", ink: INK },
+  { art: "horse", file: "07.jpg", width: 1200, height: 900, mode: "line", tone: "cream", ink: INK },
+  { art: "dhol", file: "08.jpg", width: 1200, height: 900, mode: "print" },
+  { art: "diya", file: "09.jpg", width: 1200, height: 900, mode: "line", tone: "maroon", ink: GOLD_LIGHT },
+  { art: "ganeshaLine", file: "10.jpg", width: 1200, height: 1600, mode: "line", tone: "cream", ink: INK },
+  { art: "peacock", file: "11.jpg", width: 1200, height: 900, mode: "line", tone: "maroon", ink: GOLD_LIGHT },
+  { art: "mehndi", file: "12.jpg", width: 1200, height: 900, mode: "line", tone: "cream", ink: INK },
+  { art: "henna", file: "13.jpg", width: 1200, height: 900, mode: "line", tone: "maroon", ink: GOLD_LIGHT },
+  { art: "cartoonCouple", file: "14.jpg", width: 1200, height: 1600, mode: "print" },
+];
+
+async function prepareGallery() {
+  console.log("Album");
   await mkdir(path.join(PUBLIC, "photos"), { recursive: true });
   for (const item of GALLERY) {
-    await cropPhoto(item.id, item.crop, `photos/${item.file}`);
+    await page({ url: ART[item.art], ink: GOLD, ...item, file: `photos/${item.file}` });
   }
+}
 
-  console.log("Wallpapers & widgets");
-  await cropPhoto("39083731", [1170, 2532], "wallpaper-lock.jpg", { quality: 80 });
-  // Home wallpaper: diya bokeh, softly blurred and dimmed so the iOS widgets
-  // and labels stay perfectly legible on top of it.
-  const homeSource = await fetchPhoto("8887298");
-  {
-    const { width = 0, height = 0 } = await sharp(homeSource).metadata();
-    const cropWidth = Math.round((height * 1170) / 2532);
-    await sharp(homeSource)
-      .extract({
-        // Frame the diya on the left, away from the hand on the right.
-        left: Math.min(190, Math.max(0, width - cropWidth)),
-        top: 0,
-        width: Math.min(cropWidth, width),
-        height,
-      })
-      .resize(1170, 2532, { fit: "cover" })
-      .blur(9)
-      .modulate({ brightness: 0.58, saturation: 1.05 })
-      .jpeg({ quality: 78, mozjpeg: true })
-      .toFile(path.join(PUBLIC, "wallpaper-home.jpg"));
-    console.log("  ✓ wallpaper-home.jpg");
-  }
-  await cropPhoto("18016520", [512, 512], "profile.jpg", { quality: 84, position: "attention" });
-  await cropPhoto("39820649", [1000, 1000], "reading-list.jpg", { quality: 82 });
-  await cropPhoto("8819214", [900, 620], "message.jpg", { quality: 82 });
+async function prepareWallpapers() {
+  console.log("Wallpapers");
+  // Lock screen: a quiet palanquin etching, dimmed under the clock.
+  await wallpaper({ url: ART.palki, file: "wallpaper-lock.jpg", brightness: 0.8, scale: 0.64, y: 0.36 });
+  // Home screen: a large, soft mandala so icons and labels stay legible.
+  await wallpaper({ url: ART.henna, file: "wallpaper-home.jpg", scale: 1.28, y: 0.34, blur: 7, brightness: 0.4 });
+}
+
+async function prepareWidgets() {
+  console.log("Widgets");
+  const inset = 34;
+  // Safari widget: the palanquin plate, cropped square.
+  await page({ url: ART.palki, file: "reading-list.jpg", width: 1000, height: 1000, mode: "line", tone: "maroon", inset });
+  // Messages attachment: a lit diya plate.
+  await page({ url: ART.diya, file: "message.jpg", width: 900, height: 620, mode: "line", tone: "maroon", inset });
+  // Map widget pin: the painted couple, cropped to their faces.
+  const couple = await download(ART.couple);
+  await sharp(couple)
+    .rotate()
+    .resize({ width: 512, height: 512, fit: "cover", position: "attention" })
+    .jpeg({ quality: 86, mozjpeg: true })
+    .toFile(path.join(PUBLIC, "profile.jpg"));
+  console.log("  ✓ profile.jpg");
 }
 
 async function prepareGanesha() {
   console.log("Ganesha");
-  // A sharp crop of the idol at the decorated pandal, framed on the face and
-  // crown. This is the image used for the invitation mark and the unlock
-  // ceremony, so it needs to hold up when scaled up.
-  const source = await fetchPhoto("33350745");
-  await sharp(source)
-    .extract({ left: 560, top: 1480, width: 700, height: 700 })
-    .resize({ width: 900, height: 900 })
-    .jpeg({ quality: 88, mozjpeg: true })
+  // A drawn mark, not a photograph: gold line art on deep maroon, so it holds
+  // up as a circular enamel badge on the lock screen and in the invitation.
+  const size = 900;
+  const art = await sharp(await recolour(await download(ART.ganeshaMark), "#EBCB8B"))
+    .resize({ width: 660, height: 660, fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } })
+    .toBuffer();
+  const meta = await sharp(art).metadata();
+  await sharp(Buffer.from(plateSvg(size, size, "maroon")))
+    .composite([
+      { input: art, left: Math.round((size - meta.width) / 2), top: Math.round((size - meta.height) / 2) },
+      {
+        input: Buffer.from(
+          `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}">
+             <circle cx="450" cy="450" r="352" fill="none" stroke="#E8C173" stroke-width="4" opacity="0.75"/>
+             <circle cx="450" cy="450" r="374" fill="none" stroke="#E8C173" stroke-width="1.6" opacity="0.4"/>
+           </svg>`
+        ),
+      },
+    ])
+    .jpeg({ quality: 90, mozjpeg: true })
     .toFile(path.join(PUBLIC, "ganesha.jpg"));
   console.log("  ✓ ganesha.jpg");
 }
@@ -197,97 +381,60 @@ async function prepareIcons() {
   const calendar = `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512">
     <rect width="512" height="512" rx="114" fill="#FCFBF8"/>
     <rect x="1" y="1" width="510" height="510" rx="113" fill="none" stroke="#E6E1D7" stroke-width="2"/>
-    <text x="256" y="168" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="74" font-weight="700" fill="#E0393E" letter-spacing="2">NOV</text>
-    <text x="256" y="388" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="228" font-weight="300" fill="#1C1C1E">19</text>
+    <text x="256" y="168" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="74" font-weight="700" fill="#E0393E" letter-spacing="2">JAN</text>
+    <text x="256" y="388" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="228" font-weight="300" fill="#1C1C1E">15</text>
   </svg>`;
   await sharp(Buffer.from(calendar)).png().toFile(path.join(PUBLIC, "icons", "calendar.png"));
   console.log("  ✓ icons/calendar.png");
 }
 
 async function prepareOg() {
-  const base = await sharp(await fetchPhoto("39083731"))
-    .resize(1200, 630, { fit: "cover", position: "centre" })
-    .modulate({ brightness: 0.7, saturation: 0.95 })
+  const source = await download(ART.couple);
+  const art = await sharp(source)
+    .resize(560, 630, { fit: "cover", position: "attention" })
     .toBuffer();
-  const overlay = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
+  const paper = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
     <defs>
-      <linearGradient id="fade" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0" stop-color="#1B0712" stop-opacity=".94"/>
-        <stop offset=".62" stop-color="#1B0712" stop-opacity=".72"/>
-        <stop offset="1" stop-color="#1B0712" stop-opacity=".25"/>
+      <linearGradient id="paper" x1="0" y1="0" x2=".6" y2="1">
+        <stop offset="0" stop-color="#FDF9F0"/><stop offset="1" stop-color="#F0DFC0"/>
       </linearGradient>
-      <linearGradient id="gold" x1="0" y1="0" x2=".4" y2="1">
-        <stop offset="0" stop-color="#F8E8BC"/><stop offset="1" stop-color="#C99A4A"/>
+      <linearGradient id="fade" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#FBF3E5" stop-opacity="1"/>
+        <stop offset="1" stop-color="#FBF3E5" stop-opacity="0"/>
       </linearGradient>
     </defs>
-    <rect width="1200" height="630" fill="url(#fade)"/>
-    <rect x="28" y="28" width="1144" height="574" rx="26" fill="none" stroke="#E8C173" stroke-width="1.6" opacity=".55"/>
-    <text x="80" y="172" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="17" letter-spacing="5" fill="#E8C173">WITH THE BLESSINGS OF LORD GANESHA</text>
-    <text x="80" y="288" font-family="Georgia, 'Times New Roman', serif" font-size="82" fill="#FCF3DF">Ekansh &amp; Neha</text>
-    <text x="80" y="354" font-family="Georgia, 'Times New Roman', serif" font-size="35" letter-spacing="2" fill="#E8C173">Tilak &amp; Godh Bharai</text>
-    <text x="80" y="442" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="25" fill="#F3DFC2">Thursday, 19 November 2026 · 7:00 PM</text>
-    <text x="80" y="482" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="20" fill="#D9BE9A">The SK Wedding Bells, Imperia Hall · Delhi</text>
-    <text x="80" y="560" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="16" letter-spacing="4" fill="#C99A4A">UNLOCK THE INVITATION</text>
+    <rect width="1200" height="630" fill="url(#paper)"/>
   </svg>`;
-  await sharp(base)
-    .composite([{ input: Buffer.from(overlay) }])
+  const texture = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
+    <rect x="700" y="0" width="180" height="630" fill="url(#fade)"/>
+    <rect x="26" y="26" width="1148" height="578" fill="none" stroke="#C99A4A" stroke-width="2" opacity=".55"/>
+    <rect x="33" y="33" width="1134" height="564" fill="none" stroke="#C99A4A" stroke-width="0.8" opacity=".35"/>
+    <text x="76" y="170" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="16" letter-spacing="5" fill="#A0785C">WITH THE BLESSINGS OF LORD GANESHA</text>
+    <text x="76" y="286" font-family="Georgia, 'Times New Roman', serif" font-size="80" fill="#4A1223">Ekansh &amp; Neha</text>
+    <text x="76" y="348" font-family="Georgia, 'Times New Roman', serif" font-size="33" letter-spacing="2" fill="#A0785C">Wedding</text>
+    <text x="76" y="436" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="25" fill="#3B2219">Friday, 15 January 2027 · 5:00 PM</text>
+    <text x="76" y="474" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="20" fill="#7B6455">The Grandeur by Lavanya, Banquet Hall · Delhi</text>
+    <text x="76" y="556" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="15" letter-spacing="4" fill="#C99A4A">UNLOCK THE INVITATION</text>
+    <defs><linearGradient id="fade2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#FBF3E5" stop-opacity="1"/><stop offset="1" stop-color="#FBF3E5" stop-opacity="0"/></linearGradient></defs>
+  </svg>`;
+  await sharp(Buffer.from(paper))
+    .composite([
+      { input: art, left: 700, top: 0 },
+      { input: Buffer.from(texture.replace('fill="url(#fade)"', 'fill="url(#fade2)"')), left: 0, top: 0 },
+    ])
     .jpeg({ quality: 88, mozjpeg: true })
     .toFile(path.join(PUBLIC, "og-image.jpg"));
   console.log("  ✓ og-image.jpg");
 }
 
-const VIDEOS = [
-  // The bride's hennaed hands and chooda — North Indian, faces deliberately out of frame.
-  { id: "27180421", file: "hands.mp4", width: 960, seconds: 4 },
-  // Mehndi being applied against a marigold backdrop.
-  { id: "15455199", file: "mehndi.mp4", width: 720, seconds: 6, crop: "crop=1080:1350:0:260" },
-  // Rows of diyas in the dark.
-  { id: "11758612", file: "diyas.mp4", width: 540, seconds: 6 },
-];
-
-async function prepareVideos() {
-  console.log("Videos");
-  await mkdir(path.join(PUBLIC, "videos"), { recursive: true });
-  for (const item of VIDEOS) {
-    const source = await fetchVideo(item.id);
-    const target = path.join(PUBLIC, "videos", item.file);
-    run(FFMPEG, [
-      "-y",
-      "-v", "error",
-      "-ss", "0",
-      "-t", String(item.seconds),
-      "-i", source,
-      "-an",
-      "-vf", item.crop ? `${item.crop},scale=${item.width}:-2` : `scale=${item.width}:-2`,
-      "-c:v", "libx264",
-      "-preset", "medium",
-      "-crf", "28",
-      "-pix_fmt", "yuv420p",
-      "-movflags", "+faststart",
-      target,
-    ]);
-    const poster = target.replace(/\.mp4$/, ".jpg");
-    run(FFMPEG, [
-      "-y", "-v", "error",
-      "-ss", "1",
-      "-i", target,
-      "-frames:v", "1",
-      "-vf", `scale=${item.width}:-2`,
-      "-q:v", "4",
-      poster,
-    ]);
-    console.log("  ✓", item.file, "+ poster");
-  }
-}
-
 async function main() {
-  await mkdir(FULL, { recursive: true });
   await mkdir(path.join(PUBLIC, "icons"), { recursive: true });
-  await preparePhotos();
+  await prepareGallery();
+  await prepareWallpapers();
+  await prepareWidgets();
   await prepareGanesha();
   await prepareIcons();
   await prepareOg();
-  await prepareVideos();
   console.log("Done.");
 }
 

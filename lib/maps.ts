@@ -1,13 +1,13 @@
 /**
- * Universal Google Maps search for the engagement venue:
- * The SK Wedding Bells, Imperia Hall, Jhil Mil Industrial Area, Delhi.
+ * Universal Google Maps search for the wedding venue:
+ * The Grandeur by Lavanya banquet, Ashok Vihar, Delhi.
  *
  * The Maps URLs API form is used so it works on desktop and hands off to the
  * Google Maps app on mobile when installed.
  * https://developers.google.com/maps/documentation/urls/get-started
  */
 export const MAPS_URL =
-  "https://www.google.com/maps/search/?api=1&query=The+SK+Wedding+Bells%2C+Imperia+Hall%2C+B-17%2C+Jhil+Mil+Industrial+Area%2C+Delhi+110095";
+  "https://www.google.com/maps/search/?api=1&query=The+Grandeur+by+Lavanya+banquet%2C+A-15%2C+Mahatma+Gandhi+Rd%2C+Wazirpur+Industrial+Area%2C+Ashok+Vihar%2C+Delhi+110052";
 
 function isMobile(): boolean {
   if (typeof navigator === "undefined") return false;

@@ -27,16 +27,16 @@ const RECENTS: Recent[] = [
   { name: "Ekansh", phone: "093••••••", note: "Finalize restaurant menu", time: "9:22", action: "phone" },
   {
     name: "Neha", phone: "076••••••", missed: true, unread: true,
-    note: "Finalize engagement attire & vest", time: "9:21", action: "phone",
+    note: "Finalize wedding attire & safa", time: "9:21", action: "phone",
   },
   { name: "Neha", phone: "076••••••", subtitle: "FaceTime Video", time: "8:15", action: "video" },
   {
     name: "Ekansh", phone: "093••••••", missed: true, unread: true,
-    note: "Finalize engagement photographer", time: "Yesterday", action: "phone",
+    note: "Finalize wedding photographer", time: "Yesterday", action: "phone",
   },
   { name: "Ekansh", phone: "093••••••", subtitle: "FaceTime Video", time: "Yesterday", action: "video" },
-  { name: "Neha", phone: "076••••••", note: "Finalize engagement car", time: "Yesterday", action: "phone" },
-  { name: "Neha", phone: "076••••••", note: "Finalize engagement invitation", time: "Yesterday", action: "phone" },
+  { name: "Neha", phone: "076••••••", note: "Finalize baraat cars", time: "Yesterday", action: "phone" },
+  { name: "Neha", phone: "076••••••", note: "Finalize wedding invitation", time: "Yesterday", action: "phone" },
   { name: "Ekansh", phone: "093••••••", subtitle: "093 ••• ••••", time: "Yesterday", action: "phone" },
 ];
 
