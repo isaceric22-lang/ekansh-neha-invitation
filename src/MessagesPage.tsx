@@ -29,8 +29,8 @@ const THREAD: Entry[] = [
     text: "The photos are so cute, I keep scrolling 😭",
     tapback: "❤️",
   },
-  { kind: "text", side: "sent", text: "I drew those myself, one by one 🎨" },
-  { kind: "text", side: "received", text: "No way. You're showing off now 😄" },
+  { kind: "text", side: "sent", text: "Every corner of it is ours 🤍" },
+  { kind: "text", side: "received", text: "Okay that's actually so sweet 🥺" },
   { kind: "text", side: "sent", text: "Only for you 💛" },
   {
     kind: "text",
