@@ -45,11 +45,13 @@ export type ModalFrame = {
   body: MotionProps;
 };
 
+// A spring this size overshoots the phone frame, which reads as a jolt on
+// open and close. The modal uses the same settle curve as the lock screen:
+// fast out, long landing, no overshoot.
 export const DEFAULT_MODAL_SPRING: Transition = {
-  type: "spring",
-  stiffness: 320,
-  damping: 34,
-  mass: 0.9,
+  type: "tween",
+  duration: 0.34,
+  ease: [0.32, 0.72, 0, 1],
 };
 
 // The landing icon fades quickly: held any longer it reads as a stretched
