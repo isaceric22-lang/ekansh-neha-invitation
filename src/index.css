@@ -29,7 +29,10 @@ body,
 }
 
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  /* Colour emoji faces are named explicitly: leaving them out lets the generic
+     fallback land on a monochrome symbol face, and emoji then look blank. */
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
   background: #0b1012;
 }
 
