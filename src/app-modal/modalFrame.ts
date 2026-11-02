@@ -58,14 +58,14 @@ export const DEFAULT_MODAL_SPRING: Transition = {
 // icon smeared across the expanding window.
 const ICON_CROSSFADE_ENTER: Transition = { duration: 0.09, ease: "easeOut" };
 const HEADER_EXIT: Transition = { duration: 0.28, ease: "easeOut" };
-const BACKPLATE_EXIT: Transition = { duration: 0.5, ease: "easeOut" };
-const CONTENT_ENTER: Transition = { duration: 0.18, ease: "easeOut" };
-const CONTENT_EXIT: Transition = { duration: 0.22, ease: "easeOut" };
+const CONTENT_ENTER: Transition = { duration: 0.2, ease: "easeOut" };
 
+// The backplate holds its colour all the way out. Fading it early left a bare
+// white card collapsing into the icon, which read as the app never being there.
 const MODAL_BACKPLATE: MotionProps = {
   initial: { opacity: 1 },
   animate: { opacity: 1 },
-  exit: { opacity: 0, transition: BACKPLATE_EXIT },
+  exit: { opacity: 1 },
 };
 
 // Never re-appear on the way out: the real home icon is already underneath, so
@@ -118,11 +118,15 @@ function modalShell(
   };
 }
 
-function modalBody(appReady: boolean): MotionProps {
+// The app paints for the whole morph, in both directions: it fades up as the
+// shell expands and shrinks back into the icon still visible, the way iOS does.
+// Gating it on `appReady` meant the app was blank while opening and gone while
+// closing.
+function modalBody(): MotionProps {
   return {
     initial: { opacity: 0 },
-    animate: { opacity: appReady ? 1 : 0 },
-    exit: { opacity: 0, transition: CONTENT_EXIT },
+    animate: { opacity: 1 },
+    exit: { opacity: 1 },
     transition: CONTENT_ENTER,
   };
 }
@@ -144,6 +148,6 @@ export function buildModalFrame(
     backplate: MODAL_BACKPLATE,
     iconCrossfade: payload.hideIcon ? MODAL_ICON_HIDDEN : MODAL_ICON_CROSSFADE,
     header: MODAL_HEADER,
-    body: modalBody(appReady),
+    body: modalBody(),
   };
 }

@@ -18,6 +18,7 @@ import Dock from "../components/Dock";
 import { AppNavProvider, useAppOpener, type AppDef } from "./app-nav";
 import { MAPS_URL } from "../lib/maps";
 import SafariPage from "./SafariPage";
+import MapsPage from "./MapsPage";
 
 // Each tapped event opens the Calendar app showing that event's detail.
 // Opened from a widget (not an icon) → no landing-icon morph.
@@ -37,7 +38,12 @@ const ITEMS: FolderChild[] = [
     app: <CalendarPage event={CALENDAR_EVENTS[0]} />,
     chrome: { closeButton: "none" },
   },
-  { key: "map", label: "Map", iconSrc: "/icons/map.svg", href: MAPS_URL },
+  {
+    key: "map",
+    label: "Map",
+    iconSrc: "/icons/map.svg",
+    app: <MapsPage />,
+  },
   {
     key: "notes",
     label: "Notes",

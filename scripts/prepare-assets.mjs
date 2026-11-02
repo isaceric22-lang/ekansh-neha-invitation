@@ -276,27 +276,39 @@ async function prepareGallery() {
 }
 
 /**
- * Short loops for the album: a slow push into a plate, so the video tiles show
- * motion without dropping stock footage into an illustrated set.
+ * Short loops for the album: a steady push into a plate, so the video tiles
+ * move without dropping stock footage into an illustrated set.
+ *
+ * Two details make the motion read as a camera move instead of a vibrating
+ * still: the zoom is a fixed ramp per output frame (not a 0.0005 crawl that
+ * looks static), and the source is upscaled 3x first so zoompan's integer
+ * x/y steps fall well below one output pixel.
  */
 async function prepareClips() {
   console.log("Clips");
   await mkdir(path.join(PUBLIC, "videos"), { recursive: true });
+  const FPS = 30;
   const clips = [
-    { input: path.join(PUBLIC, "photos/02.jpg"), file: "palki.mp4", width: 720, height: 900, seconds: 5, rate: 0.00055 },
-    { input: path.join(PUBLIC, "photos/09.jpg"), file: "diya.mp4", width: 720, height: 700, seconds: 5, rate: 0.00055 },
-    { input: path.join(PUBLIC, "photos/13.jpg"), file: "henna.mp4", width: 720, height: 1100, seconds: 5, rate: 0.00055 },
+    { input: path.join(PUBLIC, "photos/02.jpg"), file: "palki.mp4", width: 720, height: 900, seconds: 6, zoom: 0.22, pan: 0.03 },
+    { input: path.join(PUBLIC, "photos/09.jpg"), file: "diya.mp4", width: 720, height: 700, seconds: 6, zoom: 0.26, pan: -0.03 },
+    { input: path.join(PUBLIC, "photos/13.jpg"), file: "henna.mp4", width: 720, height: 1100, seconds: 6, zoom: 0.2, pan: 0.03 },
   ];
   for (const clip of clips) {
     const target = path.join(PUBLIC, "videos", clip.file);
+    const frames = Math.round(clip.seconds * FPS);
     run(FFMPEG, [
       "-y", "-v", "error",
-      "-loop", "1", "-t", String(clip.seconds),
+      "-loop", "1", "-framerate", String(FPS), "-t", String(clip.seconds),
       "-i", clip.input,
       "-vf",
-      `scale=1600:-2,zoompan=z='min(zoom+${clip.rate},1.12)':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=${clip.seconds * 24}:s=${clip.width}x${clip.height}:fps=24`,
+      [
+        "scale=iw*3:-2:flags=lanczos",
+        `zoompan=z='1.02+${clip.zoom}*on/${frames}':` +
+          `x='(iw-iw/zoom)*0.5+${clip.pan}*iw*on/${frames}':` +
+          `y='(ih-ih/zoom)*0.5':d=1:s=${clip.width}x${clip.height}:fps=${FPS}`,
+      ].join(","),
       "-t", String(clip.seconds),
-      "-c:v", "libx264", "-preset", "medium", "-crf", "27",
+      "-c:v", "libx264", "-preset", "slow", "-crf", "23",
       "-pix_fmt", "yuv420p", "-movflags", "+faststart",
       target,
     ]);

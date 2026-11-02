@@ -107,7 +107,7 @@ export function AppModal({
         }
         {...frame.body}
       >
-        {frame.appReady && frame.content}
+        {frame.content}
       </motion.div>
     </motion.div>
   );

@@ -1,45 +1,37 @@
 import { ChevronLeft, ChevronRight, Mic, Plus, Video } from "lucide-react";
 import styles from "./messages.module.css";
+import { EmojiText } from "./emoji";
 
-const SF_STACK =
+const TEXT_STACK =
   '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif';
-
-// Emoji fonts are listed explicitly after the UI font. Without them the
-// numeric-less fallback chain can land on a monochrome symbol face, which is
-// how emoji end up looking like faint line art (or nothing) in the bubbles.
-const EMOJI_STACK =
-  '"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Twemoji Mozilla"';
-
-const TEXT_STACK = `${SF_STACK}, ${EMOJI_STACK}`;
 
 type Entry =
   | { kind: "date"; text: string }
   | { kind: "text"; side: "sent" | "received"; text: string; tapback?: string };
 
-// "sent" = Ekansh, "received" = Neha. Sample conversation — swap in your own.
+// "sent" = Ekansh, "received" = Neha.
 const THREAD: Entry[] = [
   { kind: "date", text: "Today 9:41" },
-  { kind: "text", side: "received", text: "Heyyy, is the invitation done yet? 👀" },
-  { kind: "text", side: "sent", text: "Just finished it. Look 🥰" },
-  { kind: "text", side: "received", text: "Wait… it opens like an actual iPhone 😳" },
-  { kind: "text", side: "sent", text: "That's the whole idea. Swipe up ✨" },
+  { kind: "text", side: "received", text: "You awake? I keep re-reading the invitation 😅" },
+  { kind: "text", side: "sent", text: "So it isn't just me doing that 🥰" },
   {
     kind: "text",
     side: "received",
-    text: "The photos are so cute, I keep scrolling 😭",
+    text: "The little Ganesha at the start got me 🥺",
     tapback: "❤️",
   },
-  { kind: "text", side: "sent", text: "Every corner of it is ours 🤍" },
-  { kind: "text", side: "received", text: "Okay that's actually so sweet 🥺" },
-  { kind: "text", side: "sent", text: "Only for you 💛" },
+  { kind: "text", side: "sent", text: "That one's for your mum. She'll cry 😄" },
+  { kind: "text", side: "received", text: "She cried at the menu tasting, so yes 😭" },
+  { kind: "text", side: "sent", text: "74 days. Not that I'm counting 😌" },
   {
     kind: "text",
     side: "received",
-    text: "Three weeks left and I still get butterflies 🙈",
+    text: "You are absolutely counting 🙈",
     tapback: "❤️",
   },
-  { kind: "text", side: "sent", text: "Same. 15th January, 5 o'clock. Don't be late 😌" },
-  { kind: "text", side: "received", text: "I'll be the one crying at the mandap 🥹" },
+  { kind: "text", side: "sent", text: "Guilty. 15th January, 5 o'clock — be early 💛" },
+  { kind: "text", side: "received", text: "I'll be there before the chairs are ✨" },
+  { kind: "text", side: "sent", text: "That's my girl 🥰" },
 ];
 
 // iOS contact monogram: initials on the system gray gradient (no photo).
@@ -69,15 +61,16 @@ function TextBubble({
           }`}
           style={{ fontFamily: TEXT_STACK }}
         >
-          <span className="relative z-10 block">{text}</span>
+          <span className="relative z-10 block">
+            <EmojiText>{text}</EmojiText>
+          </span>
         </div>
         {tapback && (
           <span
             className="absolute -top-3 -right-1 z-20 flex h-[26px] w-[26px] items-center justify-center rounded-full bg-white text-[13px] leading-none shadow-[0_1px_3px_rgba(0,0,0,0.18)] ring-1 ring-black/5"
-            style={{ fontFamily: TEXT_STACK }}
             aria-label={`Reacted ${tapback}`}
           >
-            {tapback}
+            <EmojiText>{tapback}</EmojiText>
           </span>
         )}
       </div>
