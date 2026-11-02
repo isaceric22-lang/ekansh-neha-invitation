@@ -56,10 +56,12 @@ export type RenderPlan = {
   };
 };
 
-const LARGE_END = 3;
-const MINI_GRID_START = 3;
-const MINI_GRID_END = 6;
-const MINI_END = 7;
+// The closed preview is a single 3x3 grid of small icons (nine slots), as iOS
+// folders are. Capacity is nine; anything past that is not previewed.
+const LARGE_END = 0;
+const MINI_GRID_START = 0;
+const MINI_GRID_END = 8;
+const MINI_END = 9;
 
 const STAGGER_ENTER_BASE = -0.025;
 const STAGGER_ENTER_STEP = 0.025;
