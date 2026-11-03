@@ -79,20 +79,35 @@ input, textarea, [contenteditable], [contenteditable="true"] {
 }
 
 /*
- * iOS has no visible scrollbars. Hiding them everywhere (while keeping the
- * momentum scrolling) makes long screens — Photos, Notes, the invitation —
- * read as native scroll views instead of desktop panes, and stops a scrollbar
- * gutter from nudging the layout on the app screens.
+ * A slim overlay scrollbar instead of the desktop chunky one (and instead of
+ * hiding it altogether): 6px, rounded, translucent grey so it reads on both the
+ * dark apps and the cream pages, and it never takes a layout gutter.
  */
 * {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(120, 120, 128, 0.55) transparent;
 }
 
 *::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-  display: none;
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba(120, 120, 128, 0.5);
+  border-radius: 999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(120, 120, 128, 0.75);
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 /* Native momentum + no rubber-band on the page itself, so only the innermost

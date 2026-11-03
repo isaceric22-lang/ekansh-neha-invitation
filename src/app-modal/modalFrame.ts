@@ -48,14 +48,22 @@ export type ModalFrame = {
 export const DEFAULT_MODAL_SPRING: Transition = {
   type: "spring",
   stiffness: 320,
-  damping: 34,
-  mass: 0.9,
+  damping: 34,    mass: 0.9,
+};
+
+// Closing is a decelerating curve, not a spring. A spring undershoots on the
+// way in — the card shrinks *past* the icon and springs back — which reads as a
+// wobble at the end of the dismiss rather than a landing. This is the same
+// settle curve the lock screen uses, so both directions feel like one system.
+const MODAL_CLOSE: Transition = {
+  duration: 0.3,
+  ease: [0.32, 0.72, 0, 1],
 };
 
 const ICON_CROSSFADE_ENTER: Transition = { duration: 0.18, ease: "easeOut" };
 const ICON_CROSSFADE_EXIT: Transition = {
-  duration: 0.12,
-  delay: 0.22,
+  duration: 0.1,
+  delay: 0.14,
   ease: "easeOut",
 };
 const HEADER_EXIT: Transition = { duration: 0.28, ease: "easeOut" };
@@ -112,7 +120,7 @@ function modalShell(
       borderRadius: 0,
       opacity: 1,
     },
-    exit: collapsed,
+    exit: { ...collapsed, transition: MODAL_CLOSE },
     transition: modalSpring,
   };
 }

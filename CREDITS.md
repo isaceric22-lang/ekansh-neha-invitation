@@ -2,10 +2,9 @@
 
 ## Artwork
 
-The album is deliberately a **mix**: drawn plates (illustration and digital
-painting) and a handful of real photographs. Both are printed on the same cream
-paper with the same gold rule, so a photograph and a line drawing can sit side
-by side without the set looking stitched together.
+The album is photographic: `photos/01.jpeg` … `photos/16.jpeg` are the real
+wedding set the invitation ships with. The drawn plates below are still used for
+the wallpapers, the Ganesha badge and the generated icons.
 
 The drawn sources are from [Pixabay](https://pixabay.com/service/license-summary/),
 whose content licence allows free commercial use without attribution. The links
@@ -34,18 +33,16 @@ and composes the plates: cream paper, gold frames, and single-colour line art
 recoloured to gold or ink. All processing is local; the site itself has no
 external image requests.
 
-## Photographs
+## Photographs and clips
 
-`photos/real-01.jpg` … `photos/real-06.jpg` are real wedding photographs,
-printed inside the same plate and rule by `scripts/prepare-photo-mix.mjs` (the
-sources live in `.tools/real`, which is not committed). The grade is nudged
-towards the paper — saturation pulled back, a warm wash and a vignette over the
-print — so they sit beside the drawings.
+`photos/01.jpeg` … `photos/16.jpeg` are photographs from the original template
+and are shown in the album as they are.
 
-The five album clips in `public/videos/` are made with ffmpeg: a slow camera
-push into an existing plate. Three move over drawings (`palki`, `diya`,
-`henna`) and two over photographs (`venue`, `bride`), so the album breathes in
-both registers.
+The three album clips in `public/videos/` (`venue`, `cake`, `bouquet`) are made by
+`scripts/prepare-clips.mjs` with ffmpeg: a slow camera push over a photograph
+that shows no face — chairs, cake, bouquet — graded to a warm maroon/gold
+duotone so people and props read as shapes. They are the only clips; the drawn
+loops are gone.
 
 ## Music
 

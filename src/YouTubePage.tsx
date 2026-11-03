@@ -185,11 +185,8 @@ export default function YouTubePage() {
 
   return (
     <div
-      className="relative h-full w-full overflow-y-auto bg-[#0F0F0F] text-white"
-      style={{
-        fontFamily: SF_STACK,
-        paddingBottom: "calc(var(--safe-bottom) + 26px)",
-      }}
+      className="relative flex h-full w-full flex-col overflow-hidden bg-[#0F0F0F] text-white"
+      style={{ fontFamily: SF_STACK }}
     >
       <style>{`@keyframes eq { from { transform: scaleY(0.3) } to { transform: scaleY(1) } }`}</style>
 
@@ -270,6 +267,12 @@ export default function YouTubePage() {
         </div>
       </div>
 
+      {/* Only this column scrolls. The player and the chrome stay pinned, so the
+          app never reads as one page sliding under a floating header. */}
+      <div
+        className="min-h-0 flex-1 overflow-y-auto"
+        style={{ paddingBottom: "calc(var(--safe-bottom) + 18px)" }}
+      >
       {/* Song heading + actions */}
       <div className="px-4 pt-3">
         <h1 className="text-[18px] font-semibold leading-snug text-white">
@@ -368,6 +371,7 @@ export default function YouTubePage() {
       </div>
 
       <div className="h-2" />
+      </div>
     </div>
   );
 }

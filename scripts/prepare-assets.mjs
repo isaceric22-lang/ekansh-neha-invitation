@@ -288,11 +288,17 @@ async function prepareClips() {
   console.log("Clips");
   await mkdir(path.join(PUBLIC, "videos"), { recursive: true });
   const FPS = 30;
-  const clips = [
-    { input: path.join(PUBLIC, "photos/02.jpg"), file: "palki.mp4", width: 720, height: 900, seconds: 6, zoom: 0.22, pan: 0.03 },
-    { input: path.join(PUBLIC, "photos/09.jpg"), file: "diya.mp4", width: 720, height: 700, seconds: 6, zoom: 0.26, pan: -0.03 },
-    { input: path.join(PUBLIC, "photos/13.jpg"), file: "henna.mp4", width: 720, height: 1100, seconds: 6, zoom: 0.2, pan: 0.03 },
-  ];
+  // The album clips are camera moves over photographs now, made by
+  // scripts/prepare-clips.mjs. No drawn clips are generated here any more.
+  const clips: {
+    input: string;
+    file: string;
+    width: number;
+    height: number;
+    seconds: number;
+    zoom: number;
+    pan: number;
+  }[] = [];
   for (const clip of clips) {
     const target = path.join(PUBLIC, "videos", clip.file);
     const frames = Math.round(clip.seconds * FPS);
