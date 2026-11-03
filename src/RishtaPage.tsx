@@ -1,5 +1,12 @@
 import { openLink } from "../lib/link";
 import { googleCalendarUrl, MAPS_URL, WEDDING } from "./invitation/data";
+import { localStartLabel } from "./invitation/time";
+
+/** Delhi's 5:00 PM, plus what that is where the reader is standing. */
+const LOCAL_START = localStartLabel();
+const TIME_TEXT = LOCAL_START
+  ? `${WEDDING.time} · ${LOCAL_START} your time`
+  : WEDDING.time;
 
 const SERIF = 'Georgia, "Times New Roman", serif';
 const SF_STACK =
@@ -194,7 +201,7 @@ export default function RishtaPage() {
           {[
             ["Ceremony", WEDDING.ceremony],
             ["Date", WEDDING.dateLong],
-            ["Time", WEDDING.time],
+            ["Time", TIME_TEXT],
             ["Venue", `${WEDDING.venue}, ${WEDDING.hall}`],
             ["Address", WEDDING.address],
             ["Hosted by", WEDDING.hosts],

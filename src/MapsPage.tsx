@@ -1,6 +1,10 @@
 import { Navigation } from "lucide-react";
 import { MAPS_URL, openMaps } from "../lib/maps";
 import { VENUE_MAP_EMBED, WEDDING } from "./invitation/data";
+import { localStartLabel } from "./invitation/time";
+
+/** Delhi's 5:00 PM in the reader's own clock, when that differs. */
+const LOCAL_START = localStartLabel();
 
 const SF_STACK =
   '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif';
@@ -54,6 +58,7 @@ export default function MapsPage() {
         </div>
         <div className="mt-0.5 text-[13px] text-[#6b6b70]">
           {WEDDING.hall} · {WEDDING.weekday}, {WEDDING.dateShort} · {WEDDING.time}
+          {LOCAL_START && ` · ${LOCAL_START} your time`}
         </div>
         <div className="mt-2 text-[14px] leading-[19px] text-[#3a3a3c]">
           {WEDDING.address}

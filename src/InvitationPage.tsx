@@ -4,6 +4,10 @@ import {
   MAPS_URL,
   WEDDING,
 } from "./invitation/data";
+import { localStartLabel } from "./invitation/time";
+
+/** The ceremony in the visitor's own clock, when it is not Delhi's 5:00 PM. */
+const LOCAL_START = localStartLabel();
 
 const SERIF = 'Georgia, "Times New Roman", serif';
 const SF_STACK =
@@ -100,6 +104,7 @@ export default function InvitationPage() {
           <p className="text-[14px] text-white/95">{WEDDING.dateLong}</p>
           <p className="text-[12px] text-white/65">
             {WEDDING.time} · {WEDDING.hall}
+            {LOCAL_START && ` · ${LOCAL_START} your time`}
           </p>
         </div>
 
@@ -133,7 +138,10 @@ export default function InvitationPage() {
       <div className="mx-5 mt-8 rounded-[20px] border px-4 py-5" style={{ borderColor: "rgba(201,154,74,0.4)", background: "#FFFDF8" }}>
         <div className="grid grid-cols-2 gap-y-5">
           <Detail label="Date">{WEDDING.dateLong}</Detail>
-          <Detail label="Time">{WEDDING.time}</Detail>
+          <Detail label="Time">
+            {WEDDING.time}
+            {LOCAL_START && ` · ${LOCAL_START} your time`}
+          </Detail>
           <Detail label="Venue">
             {WEDDING.venue}
             <br />

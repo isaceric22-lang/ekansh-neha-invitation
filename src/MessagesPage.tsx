@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Mic, Plus, Video } from "lucide-react";
 import styles from "./messages.module.css";
+import { daysUntilWedding, timeInZone, useNow } from "./invitation/time";
 import { EmojiText } from "./emoji";
 
 const TEXT_STACK =
@@ -21,7 +22,9 @@ type Entry =
 
 // "sent" = Ekansh, "received" = Neha.
 const THREAD: Entry[] = [
-  { kind: "date", text: "Today 9:41" },
+  // The timestamp is the reader's own clock, and the countdown below is the
+  // reader's own calendar — both resolved at render, never baked in.
+  { kind: "date", text: "{{today}}" },
   { kind: "text", side: "received", text: "Ekansh. EKANSH. Are you awake 😅" },
   { kind: "text", side: "sent", text: "Up. What happened?" },
   {
@@ -62,7 +65,11 @@ const THREAD: Entry[] = [
     alt: "Panda sticker",
     rotate: -5,
   },
-  { kind: "text", side: "received", text: "73 days. Not that either of us is counting." },
+  {
+    kind: "text",
+    side: "received",
+    text: "{{days}} days. Not that either of us is counting.",
+  },
   { kind: "text", side: "received", text: "Okay, I'm counting 🙈", tapback: "❤️" },
   { kind: "text", side: "sent", text: "Same. Be early 💛" },
   { kind: "text", side: "received", text: "I'll be there before the chairs are 🥰" },
@@ -158,6 +165,15 @@ export default function MessagesPage({ onBack }: { onBack?: () => void }) {
   const [collapsed, setCollapsed] = useState(false);
   const contactRef = useRef<HTMLDivElement>(null);
 
+  // The thread is written in placeholders so the day count and the timestamp
+  // follow the reader: a visitor in Toronto sees their own time and their own
+  // number of sleeps, not Delhi's.
+  const now = useNow(30_000);
+  const daysLeft = Math.max(daysUntilWedding(now), 0);
+  const heading = `Today ${timeInZone(now)}`;
+  const fill = (text: string) =>
+    text.replace("{{days}}", String(daysLeft)).replace("{{today}}", heading);
+
   return (
     <div
       className="flex h-full w-full flex-col bg-white"
@@ -240,7 +256,7 @@ export default function MessagesPage({ onBack }: { onBack?: () => void }) {
                   key={i}
                   className="my-2.5 text-center text-[12px] font-medium text-[#8e8e93]"
                 >
-                  {e.text}
+                  {fill(e.text)}
                 </div>
               );
             }
@@ -259,8 +275,7 @@ export default function MessagesPage({ onBack }: { onBack?: () => void }) {
             return (
               <TextBubble
                 key={i}
-                side={e.side}
-                text={e.text}
+                side={e.side}                  text={fill(e.text)}
                 tapback={e.tapback}
               />
             );

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { timeInZone, visitorZone } from "../src/invitation/time";
 
 interface ClockProps {
   time?: string;
@@ -6,11 +7,10 @@ interface ClockProps {
 }
 
 function formatNow() {
-  const d = new Date();
-  // 12-hour clock, the way iOS shows it — no leading zero on the hour.
-  const hours = d.getHours() % 12 || 12;
-  const mm = d.getMinutes().toString().padStart(2, "0");
-  return `${hours}:${mm}`;
+  // Formatted in the visitor's resolved zone rather than the build machine's:
+  // Vercel bakes the markup, the browser knows what time it is where it is.
+  // 12-hour, the way iOS shows it — no leading zero on the hour, no AM/PM.
+  return timeInZone(new Date(), visitorZone()).replace(/\s?[AP]M$/i, "");
 }
 
 export function Clock({
