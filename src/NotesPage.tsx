@@ -1,8 +1,7 @@
-import { type ReactNode } from "react";
-import { useAppNav } from "./app-nav";
+import { useRef, type ReactNode } from "react";
+import { useAppNav, useAppOpener } from "./app-nav";
 import { MAPS_URL, openMaps } from "../lib/maps";
-import { openLink } from "../lib/link";
-import { HOME } from "./SafariPage";
+import { INVITATION_APP } from "./invitationApp";
 import {
   ENGAGEMENT_ADDRESS,
   ENGAGEMENT_DATE_LONG,
@@ -202,6 +201,13 @@ function ComposeIcon() {
 
 export default function NotesPage() {
   const { close } = useAppNav();
+  const openApp = useAppOpener();
+  const invitationLinkRef = useRef<HTMLButtonElement>(null);
+
+  const openInvitation = () => {
+    const el = invitationLinkRef.current;
+    if (el) openApp(INVITATION_APP, el);
+  };
 
   return (
     <div
@@ -287,8 +293,9 @@ export default function NotesPage() {
         <p className="mt-5">
           👉{" "}
           <button
+            ref={invitationLinkRef}
             type="button"
-            onClick={() => openLink(HOME)}
+            onClick={openInvitation}
             className="underline-offset-2 active:opacity-60"
             style={{ color: LINK }}
           >

@@ -6,7 +6,6 @@ const SF_STACK =
 
 /** The invitation is a page inside Safari, not a Google Form in a new tab. */
 export const INVITATION_URL = "ekansh-neha.invitation";
-export const HOME = INVITATION_URL;
 
 function displayUrl(url: string) {
   if (url === INVITATION_URL) return INVITATION_URL;

@@ -36,6 +36,7 @@ type State = {
 
 type Action =
   | { type: "open"; active: ActiveApp }
+  | { type: "replace"; app: AppDef }
   | { type: "opened" }
   | { type: "close" }
   | { type: "exited" };
@@ -54,6 +55,18 @@ function reduce(state: State, action: Action): State {
         return { ...state, queued: action.active };
       }
       return state;
+    case "replace":
+      // A link inside an open app can hand the screen to another app. Keep the
+      // current origin so the replacement still lands back on the same icon.
+      return state.active &&
+        (state.phase === "opening" || state.phase === "open")
+        ? {
+            ...state,
+            phase: "open",
+            active: { ...state.active, app: action.app },
+            queued: null,
+          }
+        : state;
     case "opened":
       return state.phase === "opening" ? { ...state, phase: "open" } : state;
     case "close":
@@ -109,7 +122,8 @@ export function AppNavProvider({
   const announcedKey = useRef<string | null>(null);
 
   useEffect(() => {
-    if (state.phase !== "opening" || !state.active) return;
+    if (!state.active) return;
+    if (state.phase !== "opening" && state.phase !== "open") return;
     const key = state.active.app.key;
     if (announcedKey.current === key) return;
     announcedKey.current = key;
@@ -132,7 +146,14 @@ export function AppNavProvider({
 
   const open = useCallback((app: AppDef, origin: ModalOrigin) => {
     const current = stateRef.current;
-    if (current.phase === "opening" || current.phase === "open") return;
+    if (current.phase === "opening" || current.phase === "open") {
+      if (current.active?.app.key === app.key) return;
+      current.active?.app.onClose?.();
+      // Replace in place: a link in Notes should open the invitation without
+      // closing the whole phone UI.
+      dispatch({ type: "replace", app });
+      return;
+    }
     dispatch({ type: "open", active: { app, origin } });
   }, []);
 
@@ -177,9 +198,7 @@ export function AppNavProvider({
     >
       {children}
       <AnimatePresence onExitComplete={onExitComplete}>
-        {frame && (
-          <AppModal key={`app-${frame.key}`} frame={frame} onClose={close} />
-        )}
+        {frame && <AppModal key="app-modal" frame={frame} onClose={close} />}
       </AnimatePresence>
     </AppNavContext.Provider>
   );

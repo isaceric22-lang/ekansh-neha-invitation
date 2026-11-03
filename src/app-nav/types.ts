@@ -32,7 +32,10 @@ export type AppNavMotion = Partial<{
 export type AppNavApi = {
   /** Key of the app mounted or animating out; null when nothing is open. */
   openKey: string | null;
-  /** Escape hatch: caller measures its own origin (e.g. a CSS-transformed grid). */
+  /**
+   * Escape hatch: caller measures its own origin (e.g. a CSS-transformed grid).
+   * If an app is already open, the new app replaces it in place.
+   */
   open: (app: AppDef, origin: ModalOrigin) => void;
   close: () => void;
 };

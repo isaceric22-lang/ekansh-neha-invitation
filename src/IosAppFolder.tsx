@@ -16,7 +16,7 @@ import { LocationWidget } from "../components/LocationWidget";
 import { SafariWidget } from "../components/SafariWidget";
 import Dock from "../components/Dock";
 import { AppNavProvider, useAppOpener, type AppDef } from "./app-nav";
-import SafariPage from "./SafariPage";
+import { INVITATION_APP } from "./invitationApp";
 import MapsPage from "./MapsPage";
 
 // Each tapped event opens the Calendar app showing that event's detail.
@@ -101,15 +101,7 @@ function SafariInvitationWidget() {
         onClick={() => {
           const el = rootRef.current;
           if (!el) return;
-          openApp(
-            {
-              key: "invitation",
-              iconSrc: "/icons/safari.png",
-              render: () => <SafariPage />,
-              hideIcon: true,
-            },
-            el
-          );
+          openApp(INVITATION_APP, el);
         }}
       />
     </div>

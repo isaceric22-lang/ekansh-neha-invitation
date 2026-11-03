@@ -30,7 +30,6 @@ export function AppModal({
 
   return (
     <motion.div
-      key={`app-${frame.key}`}
       className="fixed overflow-hidden shadow-2xl"
       style={{ zIndex: chrome.zIndex }}
       {...frame.shell}
