@@ -71,8 +71,12 @@ const THREAD: Entry[] = [
     text: "{{days}} days. Not that either of us is counting.",
   },
   { kind: "text", side: "received", text: "Okay, I'm counting 🙈", tapback: "❤️" },
-  { kind: "text", side: "sent", text: "Same. Be early 💛" },
-  { kind: "text", side: "received", text: "I'll be there before the chairs are 🥰" },
+  { kind: "text", side: "sent", text: "Same. I'll even be on time for once 💛" },
+  {
+    kind: "text",
+    side: "received",
+    text: "You're the groom. The baraat is allowed to be late 🥰",
+  },
 ];
 
 // iOS contact monogram: initials on the system gray gradient (no photo).
