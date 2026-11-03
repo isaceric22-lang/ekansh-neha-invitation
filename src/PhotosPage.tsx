@@ -74,28 +74,22 @@ function CollectionIcon({ color = "white" }: { color?: string }) {
 }
 
 /**
- * The album. Real photographs throughout — the stock wedding set the invitation
- * shipped with — plus three clips that are camera moves over face-free frames
- * (chairs, cake, decor) graded to a warm duotone. Heights are masonry hints
- * derived from each file's aspect, not real pixel heights.
+ * The album holds face-free frames only: rings on lace, the bouquet, the
+ * decorated entrance, the cake, the table setting, rows of chairs. Nobody in the
+ * album is a stranger standing in for the couple — a stock couple beside an
+ * Indian wedding invitation reads wrong, and the details carry the romance
+ * better anyway. Two duotone stills and three clips add the artistic register.
+ * Heights are masonry hints, not real pixel heights.
  */
 const PHOTOS: { file: string; height: number }[] = [
-  { file: "01.jpeg", height: 620 },
-  { file: "02.jpeg", height: 620 },
-  { file: "03.jpeg", height: 300 },
-  { file: "04.jpeg", height: 620 },
-  { file: "05.jpeg", height: 620 },
-  { file: "06.jpeg", height: 489 },
-  { file: "07.jpeg", height: 300 },
-  { file: "08.jpeg", height: 620 },
-  { file: "09.jpeg", height: 551 },
-  { file: "10.jpeg", height: 620 },
-  { file: "11.jpeg", height: 620 },
-  { file: "12.jpeg", height: 300 },
-  { file: "13.jpeg", height: 620 },
-  { file: "14.jpeg", height: 620 },
-  { file: "15.jpeg", height: 620 },
-  { file: "16.jpeg", height: 300 },
+  { file: "02.jpeg", height: 620 }, // rings on lace
+  { file: "06.jpeg", height: 489 }, // bouquet
+  { file: "09.jpeg", height: 551 }, // decorated entrance
+  { file: "11.jpeg", height: 620 }, // cake
+  { file: "14.jpeg", height: 620 }, // table setting
+  { file: "15.jpeg", height: 620 }, // rows of chairs
+  { file: "art-rings.jpg", height: 620 }, // duotone rings
+  { file: "art-arch.jpg", height: 551 }, // duotone entrance
 ];
 
 const CLIPS: { file: string; height: number }[] = [
@@ -113,30 +107,22 @@ type AlbumItem = {
   poster?: string;
 };
 
-/** Interleave the clips through the photographs so the grid keeps moving. */
+/** Interleave the stills and the clips so the grid keeps moving. */
 const ORDER: string[] = [
-  "01.jpeg",
-  "15.jpeg",
-  "venue.mp4",
-  "03.jpeg",
-  "11.jpeg",
-  "05.jpeg",
-  "cake.mp4",
-  "07.jpeg",
-  "16.jpeg",
   "02.jpeg",
+  "venue.mp4",
+  "art-arch.jpg",
   "06.jpeg",
-  "09.jpeg",
-  "bouquet.mp4",
-  "12.jpeg",
-  "04.jpeg",
-  "13.jpeg",
-  "08.jpeg",
-  "10.jpeg",
+  "11.jpeg",
+  "art-rings.jpg",
+  "cake.mp4",
   "14.jpeg",
+  "09.jpeg",
+  "15.jpeg",
+  "bouquet.mp4",
 ];
 
-const FAVOURITES = ["15.jpeg", "11.jpeg", "01.jpeg", "03.jpeg", "16.jpeg", "07.jpeg"];
+const FAVOURITES = ["02.jpeg", "06.jpeg", "11.jpeg", "15.jpeg", "14.jpeg", "09.jpeg"];
 
 function buildAlbum(): AlbumItem[] {
   const byFile = new Map<string, AlbumItem>();

@@ -49,6 +49,34 @@ const DUOTONE =
   "g='0/0.06 0.5/0.38 1/0.76':" +
   "b='0/0.13 0.5/0.27 1/0.45'";
 
+/**
+ * Two stills in the same grade, so the album has an artistic register next to
+ * the plain photographs — rings on lace, and the decorated entrance.
+ */
+const STILLS = [
+  { src: "02.jpeg", file: "art-rings.jpg", width: 900, height: 1300 },
+  { src: "09.jpeg", file: "art-arch.jpg", width: 1000, height: 1200 },
+];
+
+function still(def) {
+  const source = path.join(SRC, def.src);
+  if (!existsSync(source)) throw new Error(`Missing source: ${source}`);
+  run(FFMPEG, [
+    "-y", "-v", "error",
+    "-i", source,
+    "-vf",
+    [
+      `scale=${def.width}:-2:flags=lanczos`,
+      `crop=${def.width}:${def.height}`,
+      DUOTONE,
+      "vignette=PI/5",
+    ].join(","),
+    "-frames:v", "1", "-q:v", "3",
+    path.join(PUBLIC, "photos", def.file),
+  ]);
+  console.log("  ✓", def.file);
+}
+
 function run(command, args) {
   const result = spawnSync(command, args, { stdio: "inherit" });
   if (result.status !== 0) throw new Error(`Command failed: ${command}`);
@@ -90,8 +118,11 @@ function clip(clipDef) {
 
 async function main() {
   await mkdir(path.join(PUBLIC, "videos"), { recursive: true });
+  await mkdir(path.join(PUBLIC, "photos"), { recursive: true });
   console.log("Clips");
   for (const item of CLIPS) clip(item);
+  console.log("Stills");
+  for (const item of STILLS) still(item);
   console.log("Done.");
 }
 

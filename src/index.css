@@ -83,27 +83,40 @@ input, textarea, [contenteditable], [contenteditable="true"] {
  * hiding it altogether): 6px, rounded, translucent grey so it reads on both the
  * dark apps and the cream pages, and it never takes a layout gutter.
  */
+/* A dark base scheme so the native overlay scrollbar is drawn white-on-dark
+ * instead of painting a light track across a dark app screen. */
+html {
+  color-scheme: dark;
+}
+
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(120, 120, 128, 0.55) transparent;
+  scrollbar-color: rgba(150, 150, 158, 0.55) transparent;
 }
 
 *::-webkit-scrollbar {
   width: 6px;
   height: 6px;
-}
-
-*::-webkit-scrollbar-track {
   background: transparent;
 }
 
+/* No plate behind the thumb: the track stays fully transparent, so nothing
+ * white shows under it on the dark screens. */
+*::-webkit-scrollbar-track,
+*::-webkit-scrollbar-track-piece {
+  background: transparent;
+  border: 0;
+}
+
 *::-webkit-scrollbar-thumb {
-  background: rgba(120, 120, 128, 0.5);
+  background: rgba(150, 150, 158, 0.55);
   border-radius: 999px;
+  background-clip: padding-box;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background: rgba(120, 120, 128, 0.75);
+  background: rgba(150, 150, 158, 0.8);
+  background-clip: padding-box;
 }
 
 *::-webkit-scrollbar-corner {

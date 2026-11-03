@@ -2,9 +2,9 @@
 
 ## Artwork
 
-The album is photographic: `photos/01.jpeg` … `photos/16.jpeg` are the real
-wedding set the invitation ships with. The drawn plates below are still used for
-the wallpapers, the Ganesha badge and the generated icons.
+The album is photographic: it uses the face-free frames of the original
+template's photograph set (listed under Photographs below). The drawn plates are
+still used for the wallpapers, the Ganesha badge and the generated icons.
 
 The drawn sources are from [Pixabay](https://pixabay.com/service/license-summary/),
 whose content licence allows free commercial use without attribution. The links
@@ -35,13 +35,15 @@ external image requests.
 
 ## Photographs and clips
 
-`photos/01.jpeg` … `photos/16.jpeg` are photographs from the original template
-and are shown in the album as they are.
+The album uses only face-free frames from the original template's photograph
+set: `photos/02.jpeg` (rings on lace), `06` (bouquet), `09` (decorated
+entrance), `11` (cake), `14` (table setting) and `15` (rows of chairs), plus two
+duotone stills (`photos/art-rings.jpg`, `photos/art-arch.jpg`). Frames showing a
+face were removed rather than left to stand in for the couple.
 
 The three album clips in `public/videos/` (`venue`, `cake`, `bouquet`) are made by
-`scripts/prepare-clips.mjs` with ffmpeg: a slow camera push over a photograph
-that shows no face — chairs, cake, bouquet — graded to a warm maroon/gold
-duotone so people and props read as shapes. They are the only clips; the drawn
+`scripts/prepare-clips.mjs` with ffmpeg: a slow camera push over one of those
+frames, graded to a warm maroon/gold duotone. They are the only clips; the drawn
 loops are gone.
 
 ## Music
