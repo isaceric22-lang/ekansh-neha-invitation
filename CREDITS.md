@@ -2,9 +2,10 @@
 
 ## Artwork
 
-The album is photographic: it uses the face-free frames of the original
-template's photograph set (listed under Photographs below). The drawn plates are
-still used for the wallpapers, the Ganesha badge and the generated icons.
+The album is the drawn plate set: cream paper, gold rules, single-colour line art
+(sources below). No photograph of a person appears in it — a stock couple
+standing in for Ekansh and Neha reads as strangers, so the drawings carry the
+album and only the clips are photographic.
 
 The drawn sources are from [Pixabay](https://pixabay.com/service/license-summary/),
 whose content licence allows free commercial use without attribution. The links
@@ -33,18 +34,20 @@ and composes the plates: cream paper, gold frames, and single-colour line art
 recoloured to gold or ink. All processing is local; the site itself has no
 external image requests.
 
-## Photographs and clips
+## Photographs, clips and stickers
 
-The album uses only face-free frames from the original template's photograph
-set: `photos/02.jpeg` (rings on lace), `06` (bouquet), `09` (decorated
-entrance), `11` (cake), `14` (table setting) and `15` (rows of chairs), plus two
-duotone stills (`photos/art-rings.jpg`, `photos/art-arch.jpg`). Frames showing a
-face were removed rather than left to stand in for the couple.
+The album is drawn: `photos/01.jpg` … `photos/14.jpg` are the plates composed
+above. Frames from the original template's photograph set that showed a face were
+removed rather than left to stand in for the couple.
 
 The three album clips in `public/videos/` (`venue`, `cake`, `bouquet`) are made by
-`scripts/prepare-clips.mjs` with ffmpeg: a slow camera push over one of those
-frames, graded to a warm maroon/gold duotone. They are the only clips; the drawn
-loops are gone.
+`scripts/prepare-clips.mjs` with ffmpeg: a slow camera push over a face-free
+photograph — chairs, cake, bouquet — graded to a warm maroon/gold duotone. They
+are the only photographic material in the app.
+
+`public/stickers/*.png` are the same gold line art cut out on transparency by
+`scripts/prepare-stickers.mjs`, and are sent in the Messages thread the way
+iMessage sends a sticker: no bubble, no caption.
 
 ## Music
 

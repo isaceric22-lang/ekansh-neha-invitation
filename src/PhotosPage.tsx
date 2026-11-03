@@ -74,22 +74,26 @@ function CollectionIcon({ color = "white" }: { color?: string }) {
 }
 
 /**
- * The album holds face-free frames only: rings on lace, the bouquet, the
- * decorated entrance, the cake, the table setting, rows of chairs. Nobody in the
- * album is a stranger standing in for the couple — a stock couple beside an
- * Indian wedding invitation reads wrong, and the details carry the romance
- * better anyway. Two duotone stills and three clips add the artistic register.
- * Heights are masonry hints, not real pixel heights.
+ * The album is the drawn set again: cream paper, gold rules, single-colour line
+ * art (sources in CREDITS.md). No photographs — a stock couple standing in for
+ * Ekansh and Neha reads as strangers, and the drawn plates are the register this
+ * invitation was designed around. Heights are masonry hints, not real pixels.
  */
 const PHOTOS: { file: string; height: number }[] = [
-  { file: "02.jpeg", height: 620 }, // rings on lace
-  { file: "06.jpeg", height: 489 }, // bouquet
-  { file: "09.jpeg", height: 551 }, // decorated entrance
-  { file: "11.jpeg", height: 620 }, // cake
-  { file: "14.jpeg", height: 620 }, // table setting
-  { file: "15.jpeg", height: 620 }, // rows of chairs
-  { file: "art-rings.jpg", height: 620 }, // duotone rings
-  { file: "art-arch.jpg", height: 551 }, // duotone entrance
+  { file: "01.jpg", height: 560 }, // couple plate
+  { file: "02.jpg", height: 330 }, // palanquin
+  { file: "03.jpg", height: 560 }, // peacock feather
+  { file: "04.jpg", height: 440 }, // gold mandala
+  { file: "05.jpg", height: 330 }, // flower wreath
+  { file: "06.jpg", height: 440 }, // ceremony
+  { file: "07.jpg", height: 330 }, // baraat horse
+  { file: "08.jpg", height: 300 }, // henna swirl
+  { file: "09.jpg", height: 300 }, // diya
+  { file: "10.jpg", height: 560 }, // ganesha
+  { file: "11.jpg", height: 330 }, // peacock feather (maroon)
+  { file: "12.jpg", height: 330 }, // henna vine
+  { file: "13.jpg", height: 300 }, // henna flower
+  { file: "14.jpg", height: 560 }, // ganesha mark
 ];
 
 const CLIPS: { file: string; height: number }[] = [
@@ -107,22 +111,28 @@ type AlbumItem = {
   poster?: string;
 };
 
-/** Interleave the stills and the clips so the grid keeps moving. */
+/** Interleave the clips through the plates so the grid keeps moving. */
 const ORDER: string[] = [
-  "02.jpeg",
+  "01.jpg",
   "venue.mp4",
-  "art-arch.jpg",
-  "06.jpeg",
-  "11.jpeg",
-  "art-rings.jpg",
+  "03.jpg",
+  "02.jpg",
+  "05.jpg",
   "cake.mp4",
-  "14.jpeg",
-  "09.jpeg",
-  "15.jpeg",
+  "06.jpg",
+  "04.jpg",
+  "07.jpg",
   "bouquet.mp4",
+  "08.jpg",
+  "09.jpg",
+  "10.jpg",
+  "11.jpg",
+  "12.jpg",
+  "13.jpg",
+  "14.jpg",
 ];
 
-const FAVOURITES = ["02.jpeg", "06.jpeg", "11.jpeg", "15.jpeg", "14.jpeg", "09.jpeg"];
+const FAVOURITES = ["01.jpg", "03.jpg", "10.jpg", "06.jpg", "11.jpg", "13.jpg"];
 
 function buildAlbum(): AlbumItem[] {
   const byFile = new Map<string, AlbumItem>();

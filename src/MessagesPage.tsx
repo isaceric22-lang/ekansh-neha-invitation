@@ -9,45 +9,62 @@ type Entry =
   | { kind: "date"; text: string }
   | { kind: "text"; side: "sent" | "received"; text: string; tapback?: string }
   | {
-      kind: "image";
+      kind: "sticker";
       side: "sent" | "received";
       src: string;
       alt: string;
+      /** A sticker is dropped on, not aligned — a few degrees off square. */
+      rotate?: number;
       tapback?: string;
     };
 
 // "sent" = Ekansh, "received" = Neha.
 const THREAD: Entry[] = [
   { kind: "date", text: "Today 9:41" },
-  { kind: "text", side: "received", text: "You awake? I keep re-reading the invitation 😅" },
-  { kind: "text", side: "sent", text: "Same here. I've checked the date three times 🥰" },
-  { kind: "text", side: "received", text: "Friday the 15th. It still doesn't feel real." },
-  { kind: "text", side: "sent", text: "It will when the mandap goes up." },
-  { kind: "text", side: "received", text: "Okay, look what I found for the cake table." },
+  { kind: "text", side: "received", text: "Ekansh. EKANSH. Are you awake 😅" },
+  { kind: "text", side: "sent", text: "Up. What happened?" },
   {
-    kind: "image",
+    kind: "text",
     side: "received",
-    src: "/message.jpeg",
-    alt: "Two cat wedding cake toppers",
+    text: "Nothing happened. I just found my dupatta for the 15th 🙈",
+  },
+  { kind: "text", side: "sent", text: "The one with the gold border?" },
+  { kind: "text", side: "received", text: "That one. I might have teared up a little." },
+  {
+    kind: "sticker",
+    side: "received",
+    src: "/stickers/peacock.png",
+    alt: "Gold peacock feather sticker",
+    rotate: 7,
+  },
+  {
+    kind: "text",
+    side: "sent",
+    text: "You're going to have me crying before the baraat even starts 😭",
+  },
+  { kind: "text", side: "received", text: "Good. That's the plan ✨" },
+  {
+    kind: "text",
+    side: "sent",
+    text: "Five o'clock on a Friday, though. Who plans these things 😌",
   },
   {
     kind: "text",
     side: "received",
-    text: "I'm obsessed. Look at her little bouquet 🥺",
-    tapback: "❤️",
+    text: "We do. And you'd do it again at five in the morning 💛",
   },
-  { kind: "text", side: "sent", text: "Okay, those are coming home with us 😄" },
-  { kind: "text", side: "received", text: "Good. I was going to buy them anyway 🙈" },
-  { kind: "text", side: "sent", text: "74 days. Not that I'm counting 😌" },
+  { kind: "text", side: "sent", text: "I would.", tapback: "❤️" },
   {
-    kind: "text",
-    side: "received",
-    text: "You are absolutely counting 🙈",
-    tapback: "❤️",
+    kind: "sticker",
+    side: "sent",
+    src: "/stickers/diya.png",
+    alt: "Gold diya sticker",
+    rotate: -6,
   },
-  { kind: "text", side: "sent", text: "Guilty. 15th January, 5 o'clock — be early 💛" },
-  { kind: "text", side: "received", text: "I'll be there before the chairs are ✨" },
-  { kind: "text", side: "sent", text: "That's my girl 🥰" },
+  { kind: "text", side: "received", text: "73 days. Not that either of us is counting." },
+  { kind: "text", side: "received", text: "Okay, I'm counting 🙈", tapback: "❤️" },
+  { kind: "text", side: "sent", text: "Same. Be early 💛" },
+  { kind: "text", side: "received", text: "I'll be there before the chairs are 🥰" },
 ];
 
 // iOS contact monogram: initials on the system gray gradient (no photo).
@@ -55,6 +72,17 @@ const MONOGRAM_BG = "linear-gradient(#a5abb9, #858b98)";
 
 const glassCircle =
   "flex h-11 w-11 items-center justify-center rounded-full bg-white/60 text-black shadow-[0_2px_10px_rgba(0,0,0,0.1)] backdrop-blur-xl transition-transform active:scale-95";
+
+function Tapback({ emoji }: { emoji: string }) {
+  return (
+    <span
+      className="absolute -top-2 -right-1 z-20 flex h-[26px] w-[26px] items-center justify-center rounded-full bg-white text-[13px] leading-none shadow-[0_1px_3px_rgba(0,0,0,0.18)] ring-1 ring-black/5"
+      aria-label={`Reacted ${emoji}`}
+    >
+      <EmojiText>{emoji}</EmojiText>
+    </span>
+  );
+}
 
 function TextBubble({
   side,
@@ -81,49 +109,42 @@ function TextBubble({
             <EmojiText>{text}</EmojiText>
           </span>
         </div>
-        {tapback && (
-          <span
-            className="absolute -top-3 -right-1 z-20 flex h-[26px] w-[26px] items-center justify-center rounded-full bg-white text-[13px] leading-none shadow-[0_1px_3px_rgba(0,0,0,0.18)] ring-1 ring-black/5"
-            aria-label={`Reacted ${tapback}`}
-          >
-            <EmojiText>{tapback}</EmojiText>
-          </span>
-        )}
+        {tapback && <Tapback emoji={tapback} />}
       </div>
     </div>
   );
 }
 
-function ImageBubble({
+/**
+ * A sticker: no bubble, no tail, no caption — it lands over the thread the way a
+ * sticker does in a real conversation, standing in for the feeling rather than
+ * being the subject of a message.
+ */
+function Sticker({
   side,
   src,
   alt,
+  rotate = 0,
   tapback,
 }: {
   side: "sent" | "received";
   src: string;
   alt: string;
+  rotate?: number;
   tapback?: string;
 }) {
   const sent = side === "sent";
   return (
     <div className={`flex ${sent ? "justify-end" : "justify-start"} mb-1.5`}>
-      <div className="relative max-w-[75%]">
+      <div className="relative" style={{ width: 118, height: 118 }}>
         <img
           src={src}
           alt={alt}
           draggable={false}
-          className="block w-[220px] max-w-full select-none rounded-[18px] object-cover"
-          style={{ aspectRatio: "4 / 3" }}
+          className="h-full w-full select-none object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.22)]"
+          style={{ transform: `rotate(${rotate}deg)` }}
         />
-        {tapback && (
-          <span
-            className="absolute -top-3 -right-1 z-20 flex h-[26px] w-[26px] items-center justify-center rounded-full bg-white text-[13px] leading-none shadow-[0_1px_3px_rgba(0,0,0,0.18)] ring-1 ring-black/5"
-            aria-label={`Reacted ${tapback}`}
-          >
-            <EmojiText>{tapback}</EmojiText>
-          </span>
-        )}
+        {tapback && <Tapback emoji={tapback} />}
       </div>
     </div>
   );
@@ -189,13 +210,14 @@ export default function MessagesPage({ onBack }: { onBack?: () => void }) {
                 </div>
               );
             }
-            if (e.kind === "image") {
+            if (e.kind === "sticker") {
               return (
-                <ImageBubble
+                <Sticker
                   key={i}
                   side={e.side}
                   src={e.src}
                   alt={e.alt}
+                  rotate={e.rotate}
                   tapback={e.tapback}
                 />
               );

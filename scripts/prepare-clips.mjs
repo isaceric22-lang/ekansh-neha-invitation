@@ -50,13 +50,10 @@ const DUOTONE =
   "b='0/0.13 0.5/0.27 1/0.45'";
 
 /**
- * Two stills in the same grade, so the album has an artistic register next to
- * the plain photographs — rings on lace, and the decorated entrance.
+ * No stills any more: the album is the drawn plate set, so the clips are the
+ * only photographed material, and they stay face-free.
  */
-const STILLS = [
-  { src: "02.jpeg", file: "art-rings.jpg", width: 900, height: 1300 },
-  { src: "09.jpeg", file: "art-arch.jpg", width: 1000, height: 1200 },
-];
+const STILLS = [];
 
 function still(def) {
   const source = path.join(SRC, def.src);
