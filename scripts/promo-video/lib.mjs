@@ -77,7 +77,7 @@ export async function createRecorder({ out, url, preview = false, start = 'home'
   // Warm the image cache so nothing pops in mid-shot.
   const albumFiles = [...fs.readFileSync(path.join(REPO, 'src/PhotosPage.tsx'), 'utf8').matchAll(/file: "([^"]+)"/g)].map((m) => m[1]);
   const warm = [
-    '/wallpaper-lock.jpeg', '/wallpaper-home.jpeg', '/message.jpeg', '/gift-qr.png', '/profile.jpeg',
+    '/wallpaper-lock.jpeg', '/wallpaper-home.jpeg', '/gift-qr.png', '/profile.jpeg',
     '/reading-list.jpeg', '/map-tile.svg', ...albumFiles.map((f) => `/photos/${f}`),
   ].filter((s) => bootReleased || !s.endsWith(HELD_ASSET));
   await page.evaluate(async (all) => {
