@@ -32,12 +32,15 @@ async function recolour(source, ink) {
   const [r, g, b] = [1, 3, 5].map((i) => parseInt(ink.slice(i, i + 2), 16));
   const out = Buffer.alloc(info.width * info.height * 4);
   for (let i = 0; i < data.length; i += 4) {
-    const inkAlpha = 255 - Math.min(data[i], data[i + 1], data[i + 2]);
+    // Spend the first ~18 levels on nothing: the source JPEG's paper is never
+    // pure white, and amplifying it printed a faint grey box on every plate.
+    const rawInk = 255 - Math.min(data[i], data[i + 1], data[i + 2]);
+    const inkAlpha = Math.max(0, rawInk - 18) / (255 - 18);
     const base = data[i + 3];
     out[i] = r;
     out[i + 1] = g;
     out[i + 2] = b;
-    out[i + 3] = Math.min(255, Math.round(((base * inkAlpha) / 255) * 1.45));
+    out[i + 3] = Math.min(255, Math.round(base * inkAlpha * 1.6));
   }
   return sharp(out, {
     raw: { width: info.width, height: info.height, channels: 4 },

@@ -59,9 +59,14 @@ async function recolour(source, ink) {
   for (let i = 0; i < data.length; i += 4) {
     // Distance from white along the darkest channel keeps coloured inks
     // (gold, blue) as strong as black ones.
-    const inkAlpha = 255 - Math.min(data[i], data[i + 1], data[i + 2]);
+    //
+    // The first ~18 levels are spent on nothing: a JPEG of line art is never
+    // pure white, and amplifying that near-white painted a faint grey box of the
+    // source canvas onto every plate.
+    const rawInk = 255 - Math.min(data[i], data[i + 1], data[i + 2]);
+    const inkAlpha = Math.max(0, rawInk - 18) / (255 - 18);
     const base = meta.hasAlpha ? data[i + 3] : 255;
-    const alpha = Math.min(255, Math.round(((base * inkAlpha) / 255) * 1.45));
+    const alpha = Math.min(255, Math.round(base * inkAlpha * 1.6));
     out[i] = r;
     out[i + 1] = g;
     out[i + 2] = b;
@@ -290,15 +295,7 @@ async function prepareClips() {
   const FPS = 30;
   // The album clips are camera moves over photographs now, made by
   // scripts/prepare-clips.mjs. No drawn clips are generated here any more.
-  const clips: {
-    input: string;
-    file: string;
-    width: number;
-    height: number;
-    seconds: number;
-    zoom: number;
-    pan: number;
-  }[] = [];
+  const clips = [];
   for (const clip of clips) {
     const target = path.join(PUBLIC, "videos", clip.file);
     const frames = Math.round(clip.seconds * FPS);
