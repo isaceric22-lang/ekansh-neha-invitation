@@ -21,7 +21,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "assets": "node scripts/prepare-assets.mjs"
+    "assets": "node scripts/prepare-assets.mjs",
+    "photos": "node scripts/prepare-photo-mix.mjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.0",

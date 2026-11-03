@@ -31,8 +31,8 @@ export function AppModal({
   return (
     <motion.div
       key={`app-${frame.key}`}
-      className="overflow-hidden shadow-2xl"
-      style={{ ...frame.shellStyle, zIndex: chrome.zIndex }}
+      className="fixed overflow-hidden shadow-2xl"
+      style={{ zIndex: chrome.zIndex }}
       {...frame.shell}
     >
       <motion.div
@@ -107,7 +107,7 @@ export function AppModal({
         }
         {...frame.body}
       >
-        {frame.content}
+        {frame.appReady && frame.content}
       </motion.div>
     </motion.div>
   );

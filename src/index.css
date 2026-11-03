@@ -78,6 +78,31 @@ input, textarea, [contenteditable], [contenteditable="true"] {
   user-select: text;
 }
 
+/*
+ * iOS has no visible scrollbars. Hiding them everywhere (while keeping the
+ * momentum scrolling) makes long screens — Photos, Notes, the invitation —
+ * read as native scroll views instead of desktop panes, and stops a scrollbar
+ * gutter from nudging the layout on the app screens.
+ */
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+*::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+/* Native momentum + no rubber-band on the page itself, so only the innermost
+ * scroll container moves the way it would inside an app. */
+html,
+body {
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+}
+
 @theme inline {
   --font-heading: var(--font-sans);
   --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', system-ui, sans-serif;

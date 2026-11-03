@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from "react";
+import type { ReactNode } from "react";
 import type { TargetAndTransition, Transition } from "framer-motion";
 
 export type MotionProps = {
@@ -8,7 +8,7 @@ export type MotionProps = {
   transition?: Transition;
 };
 
-/** The icon rect the modal expands from (frame coords, center anchored). */
+/** The icon rect the modal expands from (viewport coords, center anchored). */
 export type ModalOrigin = { x: number; y: number; w: number; h: number };
 
 /** Per-caller chrome — the animation core is shared, the chrome is not. */
@@ -37,46 +37,42 @@ export type ModalFrame = {
   iconSrc: string;
   content: ReactNode;
   chrome: ModalChrome;
+  appReady: boolean;
   shell: MotionProps;
-  /** The shell is a full-size layer; only its transform changes. */
-  shellStyle: CSSProperties;
   backplate: MotionProps;
   iconCrossfade: MotionProps;
   header: MotionProps;
   body: MotionProps;
 };
 
-// A spring this size settles like the system's app-open transition: quick
-// departure, a soft landing, and just enough give to feel physical. It is
-// deliberately close to critical damping so the card never bounces past the
-// phone edges.
 export const DEFAULT_MODAL_SPRING: Transition = {
   type: "spring",
-  stiffness: 300,
-  damping: 32,
+  stiffness: 320,
+  damping: 34,
   mass: 0.9,
 };
 
-// The landing icon fades quickly: held any longer it reads as a stretched
-// icon smeared across the expanding window.
-const ICON_CROSSFADE_ENTER: Transition = { duration: 0.12, ease: "easeOut" };
-const CONTENT_ENTER: Transition = { duration: 0.2, ease: "easeOut" };
+const ICON_CROSSFADE_ENTER: Transition = { duration: 0.18, ease: "easeOut" };
+const ICON_CROSSFADE_EXIT: Transition = {
+  duration: 0.12,
+  delay: 0.22,
+  ease: "easeOut",
+};
+const HEADER_EXIT: Transition = { duration: 0.28, ease: "easeOut" };
+const BACKPLATE_EXIT: Transition = { duration: 0.5, ease: "easeOut" };
+const CONTENT_ENTER: Transition = { duration: 0.18, ease: "easeOut" };
+const CONTENT_EXIT: Transition = { duration: 0.22, ease: "easeOut" };
 
-// The backplate holds its colour all the way out. Fading it early left a bare
-// white card collapsing into the icon, which read as the app never being there.
 const MODAL_BACKPLATE: MotionProps = {
   initial: { opacity: 1 },
   animate: { opacity: 1 },
-  exit: { opacity: 1 },
+  exit: { opacity: 0, transition: BACKPLATE_EXIT },
 };
 
-// The icon is only a landing mask for the expand. On the way out the real home
-// icon is already underneath the collapsing card, so this layer must stay
-// transparent or it paints a second, ghost icon at the end of the close.
 const MODAL_ICON_CROSSFADE: MotionProps = {
   initial: { opacity: 1 },
   animate: { opacity: 0 },
-  exit: { opacity: 0 },
+  exit: { opacity: 1, transition: ICON_CROSSFADE_EXIT },
   transition: ICON_CROSSFADE_ENTER,
 };
 
@@ -87,78 +83,45 @@ const MODAL_ICON_HIDDEN: MotionProps = {
   exit: { opacity: 0 },
 };
 
-// Keep the header mounted through the close. Fading it out early made the app
-// look like it had already been dismissed while the card was still shrinking.
 const MODAL_HEADER: MotionProps = {
   initial: { opacity: 1 },
   animate: { opacity: 1 },
-  exit: { opacity: 1 },
+  exit: { opacity: 0, transition: HEADER_EXIT },
 };
 
 function modalShell(
   origin: ModalOrigin,
   viewport: { w: number; h: number },
   modalSpring: Transition
-): { motion: MotionProps; style: CSSProperties } {
-  const vw = Math.max(viewport.w, 1);
-  const vh = Math.max(viewport.h, 1);
-
-  // Work entirely in transforms: the card is always laid out at full screen
-  // size and the compositor scales/translates it down onto the icon. Animating
-  // top/left/width/height instead reflowed every app screen on every frame,
-  // which is what made the close feel like it was glitching.
-  const scaleX = Math.max(origin.w, 1) / vw;
-  const scaleY = Math.max(origin.h, 1) / vh;
-
-  // Compensate for the scale so the visual corner radius at the origin matches
-  // the icon's mask instead of turning into a tiny square. This works out to
-  // ~22.5% of the frame width, independent of the icon size.
-  const iconRadius = Math.round(vw * 0.225);
-
+): MotionProps {
   const collapsed = {
-    x: origin.x - origin.w / 2,
-    y: origin.y - origin.h / 2,
-    scaleX,
-    scaleY,
-    borderRadius: iconRadius,
+    top: origin.y - origin.h / 2,
+    left: origin.x - origin.w / 2,
+    width: origin.w,
+    height: origin.h,
+    borderRadius: 14,
     opacity: 1,
   };
-
   return {
-    motion: {
-      initial: collapsed,
-      animate: {
-        x: 0,
-        y: 0,
-        scaleX: 1,
-        scaleY: 1,
-        borderRadius: 0,
-        opacity: 1,
-      },
-      exit: collapsed,
-      transition: modalSpring,
-    },
-    style: {
-      position: "fixed",
+    initial: collapsed,
+    animate: {
       top: 0,
       left: 0,
-      width: vw,
-      height: vh,
-      transformOrigin: "0 0",
-      backfaceVisibility: "hidden",
-      willChange: "transform, border-radius",
-      contain: "layout paint size",
+      width: viewport.w,
+      height: viewport.h,
+      borderRadius: 0,
+      opacity: 1,
     },
+    exit: collapsed,
+    transition: modalSpring,
   };
 }
 
-// The app paints for the whole morph, in both directions: it fades up as the
-// shell expands and stays visible while the shell shrinks back onto the icon.
-function modalBody(): MotionProps {
+function modalBody(appReady: boolean): MotionProps {
   return {
     initial: { opacity: 0 },
-    animate: { opacity: 1 },
-    exit: { opacity: 1 },
+    animate: { opacity: appReady ? 1 : 0 },
+    exit: { opacity: 0, transition: CONTENT_EXIT },
     transition: CONTENT_ENTER,
   };
 }
@@ -167,19 +130,19 @@ export function buildModalFrame(
   payload: ModalPayload,
   origin: ModalOrigin,
   viewport: { w: number; h: number },
-  modalSpring: Transition
+  modalSpring: Transition,
+  appReady: boolean
 ): ModalFrame {
-  const shell = modalShell(origin, viewport, modalSpring);
   return {
     key: payload.key,
     iconSrc: payload.iconSrc,
     content: payload.content,
     chrome: payload.chrome,
-    shell: shell.motion,
-    shellStyle: shell.style,
+    appReady,
+    shell: modalShell(origin, viewport, modalSpring),
     backplate: MODAL_BACKPLATE,
     iconCrossfade: payload.hideIcon ? MODAL_ICON_HIDDEN : MODAL_ICON_CROSSFADE,
     header: MODAL_HEADER,
-    body: modalBody(),
+    body: modalBody(appReady),
   };
 }

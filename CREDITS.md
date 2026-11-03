@@ -2,8 +2,12 @@
 
 ## Artwork
 
-Every image in this invitation is **illustration or digital painting**, not a
-photograph. The sources are from [Pixabay](https://pixabay.com/service/license-summary/),
+The album is deliberately a **mix**: drawn plates (illustration and digital
+painting) and a handful of real photographs. Both are printed on the same cream
+paper with the same gold rule, so a photograph and a line drawing can sit side
+by side without the set looking stitched together.
+
+The drawn sources are from [Pixabay](https://pixabay.com/service/license-summary/),
 whose content licence allows free commercial use without attribution. The links
 below are here so the sources stay traceable.
 
@@ -25,14 +29,23 @@ below are here so the sources stay traceable.
 | `photos/14.jpg` | [Ganesha mark](https://pixabay.com/illustrations/ganesha-161002/) |
 | `ganesha.jpg`, `icon-*.png`, `favicon-*.png` | [Ganesha mark](https://pixabay.com/illustrations/ganesha-161002/) |
 
-`scripts/prepare-assets.mjs` downloads each source once into `.tools/art` and
-composes the final plates: cream paper, gold frames, and single-colour line art
-recoloured to gold or ink, so the whole album reads as one drawn set. All
-processing is local; the site itself has no external image requests.
+`scripts/prepare-assets.mjs` downloads each drawn source once into `.tools/art`
+and composes the plates: cream paper, gold frames, and single-colour line art
+recoloured to gold or ink. All processing is local; the site itself has no
+external image requests.
 
-The three album clips (`public/videos/`) are made by the same script with
-ffmpeg: a slow push into an existing plate. They are not stock footage, so the
-motion stays inside the illustrations.
+## Photographs
+
+`photos/real-01.jpg` … `photos/real-06.jpg` are real wedding photographs,
+printed inside the same plate and rule by `scripts/prepare-photo-mix.mjs` (the
+sources live in `.tools/real`, which is not committed). The grade is nudged
+towards the paper — saturation pulled back, a warm wash and a vignette over the
+print — so they sit beside the drawings.
+
+The five album clips in `public/videos/` are made with ffmpeg: a slow camera
+push into an existing plate. Three move over drawings (`palki`, `diya`,
+`henna`) and two over photographs (`venue`, `bride`), so the album breathes in
+both registers.
 
 ## Music
 

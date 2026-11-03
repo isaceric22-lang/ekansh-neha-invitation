@@ -19,7 +19,11 @@ export function useAppIcon(app: AppDef): AppIconProps {
     ctx.open(app, ctx.env.measure(el));
   }, [app, ctx]);
 
-  // The icon stays visible: the modal lands exactly on it, so hiding it left a
-  // hole in the dock or grid that only filled in after the collapse finished.
-  return { onClick, img: { ref, style: { visibility: "visible" } } };
+  return {
+    onClick,
+    img: {
+      ref,
+      style: { visibility: ctx.openKey === app.key ? "hidden" : "visible" },
+    },
+  };
 }

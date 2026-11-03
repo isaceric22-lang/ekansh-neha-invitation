@@ -164,7 +164,10 @@ export function AppNavProvider({
           },
           state.active.origin,
           viewport,
-          spring
+          spring,
+          // The app content crossfades in once the shell has landed, and fades
+          // out while the card shrinks back onto its icon.
+          state.phase === "open"
         )
       : null;
 

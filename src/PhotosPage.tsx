@@ -94,26 +94,30 @@ function SearchIcon() {
   );
 }
 
-// Line-art plates drawn from Pixabay sources (see CREDITS.md), plus three
-// slow loops made from the same plates. No photographs and no stock wedding
-// photography. Height is a masonry hint, not the real pixel height.
+// A mix of drawn plates and real photographs (see CREDITS.md). The photographs
+// are printed inside the same cream plate and gold rule as the drawings, so the
+// album reads as one set; five slow camera moves — three over drawings, two
+// over photographs — break up the stills. Height is a masonry hint, not the
+// real pixel height.
 const WEDDING_PHOTOS: { file: string; height: number; video?: boolean }[] = [
+  { file: "real-01.jpg", height: 330 },
   { file: "01.jpg", height: 560 },
-  { file: "02.jpg", height: 330 },
+  { file: "real-04.jpg", height: 560 },
   { file: "palki.mp4", height: 300, video: true },
   { file: "03.jpg", height: 560 },
-  { file: "04.jpg", height: 440 },
-  { file: "05.jpg", height: 330 },
-  { file: "diya.mp4", height: 440, video: true },
+  { file: "real-03.jpg", height: 560 },
   { file: "06.jpg", height: 440 },
+  { file: "bride.mp4", height: 440, video: true },
+  { file: "real-05.jpg", height: 330 },
   { file: "07.jpg", height: 330 },
-  { file: "08.jpg", height: 300 },
-  { file: "09.jpg", height: 300 },
-  { file: "henna.mp4", height: 560, video: true },
+  { file: "real-02.jpg", height: 560 },
   { file: "10.jpg", height: 560 },
+  { file: "venue.mp4", height: 300, video: true },
   { file: "11.jpg", height: 330 },
-  { file: "12.jpg", height: 330 },
-  { file: "13.jpg", height: 300 },
+  { file: "real-06.jpg", height: 330 },
+  { file: "henna.mp4", height: 560, video: true },
+  { file: "13.jpg", height: 330 },
+  { file: "diya.mp4", height: 440, video: true },
   { file: "14.jpg", height: 560 },
 ];
 
