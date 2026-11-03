@@ -74,39 +74,36 @@ function CollectionIcon({ color = "white" }: { color?: string }) {
 }
 
 /**
- * The album is the drawn set again: cream paper, gold rules, single-colour line
- * art (sources in CREDITS.md). No photographs — a stock couple standing in for
- * Ekansh and Neha reads as strangers, and the drawn plates are the register this
- * invitation was designed around. Heights are masonry hints, not real pixels.
+ * The album is not only line art. Eight drawn plates keep the invitation's
+ * register — cream paper, gold rules, single-colour ink — and the rest of the
+ * pages speak: five quote cards set the way a printed card would be, and three
+ * soft cream cards built from the same cute emoji the Messages thread uses.
+ * No photographs of people: a stock couple standing in for Ekansh and Neha
+ * reads as strangers. Heights are masonry hints, not real pixels.
  */
 const PHOTOS: { file: string; height: number }[] = [
   { file: "01.jpg", height: 560 }, // couple plate
-  { file: "02.jpg", height: 330 }, // palanquin
-  { file: "03.jpg", height: 560 }, // peacock feather
-  { file: "04.jpg", height: 440 }, // gold mandala
-  { file: "05.jpg", height: 330 }, // flower wreath
-  { file: "06.jpg", height: 440 }, // ceremony
-  { file: "07.jpg", height: 330 }, // baraat horse
-  { file: "08.jpg", height: 300 }, // henna swirl
-  { file: "09.jpg", height: 300 }, // diya
-  { file: "10.jpg", height: 560 }, // ganesha
-  { file: "11.jpg", height: 330 }, // peacock feather (maroon)
-  { file: "12.jpg", height: 330 }, // henna vine
-  { file: "13.jpg", height: 300 }, // henna flower
-  { file: "14.jpg", height: 560 }, // ganesha mark
-  // Weighted towards the couple and the ceremony, like the first page.
   { file: "15.jpg", height: 300 }, // the pair, wide
-  { file: "16.jpg", height: 545 }, // garland exchange, gold on maroon
-  { file: "17.jpg", height: 440 }, // the ceremony, full bleed
-  { file: "18.jpg", height: 589 }, // the pair, tall gold plate
-  { file: "19.jpg", height: 327 }, // baraat horse
-  { file: "20.jpg", height: 589 }, // palanquin arriving
+  { file: "q1.jpg", height: 567 }, // "Two hearts, one promise."
+  { file: "03.jpg", height: 560 }, // peacock feather
+  { file: "c1.jpg", height: 567 }, // panda + heart
+  { file: "02.jpg", height: 330 }, // palanquin
+  { file: "q2.jpg", height: 567 }, // "Saath chalta rahe saari umar."
+  { file: "07.jpg", height: 330 }, // baraat horse
+  { file: "c2.jpg", height: 567 }, // teddy + sparkles
+  { file: "10.jpg", height: 560 }, // ganesha
+  { file: "q3.jpg", height: 567 }, // "You are my favourite hello."
+  { file: "09.jpg", height: 300 }, // diya
+  { file: "c3.jpg", height: 567 }, // baby + hearts
+  { file: "13.jpg", height: 300 }, // henna flower
+  { file: "q4.jpg", height: 567 }, // "Forever begins on the fifteenth."
+  { file: "q5.jpg", height: 567 }, // "Every diya I lit was a wish for you."
 ];
 
 const CLIPS: { file: string; height: number }[] = [
-  { file: "diya.mp4", height: 480 }, // diyas burning
-  { file: "mandap.mp4", height: 300 }, // the mandap dressed
-  { file: "hands.mp4", height: 300 }, // hands held, below the shoulders
+  { file: "mehendi.mp4", height: 480 }, // mehendi being drawn, marigold behind
+  { file: "rings.mp4", height: 480 }, // the ring going on
+  { file: "ganesh.mp4", height: 480 }, // Ganpati on the puja chowki
 ];
 
 type AlbumItem = {
@@ -121,31 +118,27 @@ type AlbumItem = {
 /** Interleave the clips through the plates so the grid keeps moving. */
 const ORDER: string[] = [
   "15.jpg",
-  "16.jpg",
-  "diya.mp4",
+  "mehendi.mp4",
   "01.jpg",
-  "17.jpg",
-  "18.jpg",
-  "hands.mp4",
+  "q1.jpg",
+  "c1.jpg",
   "03.jpg",
-  "19.jpg",
-  "20.jpg",
-  "mandap.mp4",
-  "06.jpg",
+  "rings.mp4",
   "02.jpg",
-  "04.jpg",
-  "05.jpg",
+  "q2.jpg",
   "07.jpg",
-  "08.jpg",
-  "09.jpg",
+  "c2.jpg",
   "10.jpg",
-  "11.jpg",
-  "12.jpg",
+  "ganesh.mp4",
+  "q3.jpg",
+  "09.jpg",
+  "c3.jpg",
   "13.jpg",
-  "14.jpg",
+  "q4.jpg",
+  "q5.jpg",
 ];
 
-const FAVOURITES = ["15.jpg", "16.jpg", "18.jpg", "01.jpg", "20.jpg", "17.jpg"];
+const FAVOURITES = ["q1.jpg", "15.jpg", "c1.jpg", "rings.mp4", "01.jpg", "q4.jpg"];
 
 function buildAlbum(): AlbumItem[] {
   const byFile = new Map<string, AlbumItem>();

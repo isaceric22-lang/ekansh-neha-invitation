@@ -30,37 +30,34 @@ const MUSIC = path.join(PUBLIC, "music", "canon-in-d.mp3");
 
 const CLIPS = [
   {
-    // A row of diyas burning in the dark.
-    src: "11758612.mp4",
-    file: "diya.mp4",
+    // Mehendi being drawn on a bride's hand, strings of marigold behind.
+    src: "15455199.mp4",
+    file: "mehendi.mp4",
     width: 720,
     height: 1000,
-    start: 1.5,
+    start: 1.2,
     seconds: 8,
     audioStart: 4,
-    crop: "centre",
   },
   {
-    // The mandap, dressed in flowers, shot through foreground blooms.
-    src: "35219420.mp4",
-    file: "mandap.mp4",
+    // The ring going on, two pairs of hands over a beaded blouse.
+    src: "38359912.mp4",
+    file: "rings.mp4",
     width: 720,
-    height: 420,
-    start: 0.5,
+    height: 1000,
+    start: 0.8,
     seconds: 8,
     audioStart: 26,
-    crop: "centre",
   },
   {
-    // Hands held, Indian wedding dress — framed below the shoulders.
-    src: "35238081.mp4",
-    file: "hands.mp4",
+    // Ganpati dressed in marigold and silver on the puja chowki.
+    src: "39543337.mp4",
+    file: "ganesh.mp4",
     width: 720,
-    height: 420,
+    height: 1000,
     start: 1,
     seconds: 8,
     audioStart: 48,
-    crop: "centre",
   },
 ];
 

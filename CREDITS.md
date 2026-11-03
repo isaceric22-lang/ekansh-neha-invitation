@@ -41,11 +41,16 @@ above, with `15.jpg`–`20.jpg` weighted towards the couple and the ceremony. Fr
 from the original template's photograph set that showed a face were removed rather
 than left to stand in for the couple.
 
-The three album clips in `public/videos/` (`diya`, `mandap`, `hands`) are cut by
+The album also holds two kinds of composed page, both made by
+`scripts/prepare-note-plates.mjs`: `photos/q1.jpg`–`q5.jpg` are quote cards set in
+the invitation's cream and gold, and `photos/c1.jpg`–`c3.jpg` are cute cards built
+from the same emoji the Messages thread uses.
+
+The three album clips in `public/videos/` (`mehendi`, `rings`, `ganesh`) are cut by
 `scripts/prepare-videos.mjs` with ffmpeg from stock footage cached in
-`.tools/stock` (not committed): diyas burning, the mandap dressed, a couple's
-hands — each framed with no face in shot. Every clip has music muxed under it from
-the soft piano in `public/music`, with fades.
+`.tools/stock` (not committed): mehendi being drawn against marigold, the ring
+going on, and Ganpati on the puja chowki — each framed with no face in shot. Every
+clip has music muxed under it from the soft piano in `public/music`, with fades.
 
 `public/stickers/*.svg` (`panda`, `baby`, `teddy`) are Twemoji glyphs, used in the
 Messages thread the way iMessage sends a sticker: no bubble, no caption.
