@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { ChevronLeft, ChevronRight, Mic, Plus, Video } from "lucide-react";
 import styles from "./messages.module.css";
 import { EmojiText } from "./emoji";
@@ -151,6 +152,11 @@ function Sticker({
 }
 
 export default function MessagesPage({ onBack }: { onBack?: () => void }) {
+  // iOS keeps the big contact block in the thread and lifts a compact avatar and
+  // name into the nav bar once that block has scrolled away, so the header still
+  // says who you are talking to without pinning the whole block.
+  const [collapsed, setCollapsed] = useState(false);
+
   return (
     <div
       className="flex h-full w-full flex-col bg-white"
@@ -179,14 +185,32 @@ export default function MessagesPage({ onBack }: { onBack?: () => void }) {
             <button type="button" aria-label="Video call" className={glassCircle}>
               <Video size={22} strokeWidth={2} />
             </button>
+
+            {/* Compact contact in the nav bar, revealed as the thread scrolls. */}
+            <div
+              aria-hidden={!collapsed}
+              className="pointer-events-none absolute inset-x-0 bottom-1 flex flex-col items-center transition-opacity duration-200"
+              style={{ opacity: collapsed ? 1 : 0 }}
+            >
+              <div
+                className="flex h-7 w-7 items-center justify-center rounded-full text-[13px] font-semibold text-white select-none"
+                style={{ background: MONOGRAM_BG }}
+              >
+                N
+              </div>
+              <span className="mt-px text-[11px] font-medium text-black">Neha</span>
+            </div>
           </div>
         </header>
 
         {/* Messages */}
-        <main className="flex-1 overflow-y-auto px-4 pt-3 pb-2">
-          {/* The contact block sits in the thread, not the nav bar, so Neha's
-              avatar and name scroll away with the messages instead of staying
-              pinned while everything under them moves. */}
+        <main
+          className="flex-1 overflow-y-auto px-4 pt-3 pb-2"
+          onScroll={(event) => setCollapsed(event.currentTarget.scrollTop > 56)}
+        >
+          {/* The big contact block sits at the top of the thread and scrolls with
+              it; the nav bar picks up the compact version once this is out of
+              view, the way Messages does it. */}
           <div className="mb-3 flex flex-col items-center">
             <div
               aria-hidden
