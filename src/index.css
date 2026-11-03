@@ -80,8 +80,9 @@ input, textarea, [contenteditable], [contenteditable="true"] {
 
 /*
  * A slim overlay scrollbar instead of the desktop chunky one (and instead of
- * hiding it altogether): 6px, rounded, translucent grey so it reads on both the
- * dark apps and the cream pages, and it never takes a layout gutter.
+ * hiding it altogether): 3px, rounded, low-opacity grey so it reads on both the
+ * dark apps and the cream pages without drawing a line down the screen, and it
+ * never takes a layout gutter.
  */
 /* A dark base scheme so the native overlay scrollbar is drawn white-on-dark
  * instead of painting a light track across a dark app screen. */
@@ -91,12 +92,12 @@ html {
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(150, 150, 158, 0.55) transparent;
+  scrollbar-color: rgba(158, 158, 168, 0.4) transparent;
 }
 
 *::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 3px;
+  height: 3px;
   background: transparent;
 }
 
@@ -109,13 +110,13 @@ html {
 }
 
 *::-webkit-scrollbar-thumb {
-  background: rgba(150, 150, 158, 0.55);
+  background: rgba(158, 158, 168, 0.4);
   border-radius: 999px;
   background-clip: padding-box;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background: rgba(150, 150, 158, 0.8);
+  background: rgba(158, 158, 168, 0.72);
   background-clip: padding-box;
 }
 

@@ -83,7 +83,7 @@ function CollectionIcon({ color = "white" }: { color?: string }) {
  */
 const PHOTOS: { file: string; height: number }[] = [
   { file: "01.jpg", height: 560 }, // couple plate
-  { file: "15.jpg", height: 300 }, // the pair, wide
+  { file: "c4.jpg", height: 567 }, // ring + heart (the couple plate is already 01)
   { file: "q1.jpg", height: 567 }, // "Two hearts, one promise."
   { file: "03.jpg", height: 560 }, // peacock feather
   { file: "c1.jpg", height: 567 }, // panda + heart
@@ -117,7 +117,7 @@ type AlbumItem = {
 
 /** Interleave the clips through the plates so the grid keeps moving. */
 const ORDER: string[] = [
-  "15.jpg",
+  "c4.jpg",
   "mehendi.mp4",
   "01.jpg",
   "q1.jpg",
@@ -138,7 +138,7 @@ const ORDER: string[] = [
   "q5.jpg",
 ];
 
-const FAVOURITES = ["q1.jpg", "15.jpg", "c1.jpg", "rings.mp4", "01.jpg", "q4.jpg"];
+const FAVOURITES = ["q1.jpg", "c4.jpg", "c1.jpg", "rings.mp4", "01.jpg", "q4.jpg"];
 
 function buildAlbum(): AlbumItem[] {
   const byFile = new Map<string, AlbumItem>();

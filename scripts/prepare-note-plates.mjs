@@ -29,13 +29,14 @@ const QUOTES = [
   { file: "q2.jpg", lines: ["Saath chalta rahe", "saari umar."] },
   { file: "q3.jpg", lines: ["You are my", "favourite hello."] },
   { file: "q4.jpg", lines: ["Forever begins", "on the fifteenth."] },
-  { file: "q5.jpg", lines: ["Every diya I lit", "was a wish for you."] },
+  { file: "q5.jpg", lines: ["My person,", "my forever."] },
 ];
 
 const CUTE = [
   { file: "c1.jpg", big: path.join(STICKERS, "panda.svg"), small: path.join(EMOJI, "2764.svg") },
   { file: "c2.jpg", big: path.join(STICKERS, "teddy.svg"), small: path.join(EMOJI, "2728.svg") },
   { file: "c3.jpg", big: path.join(STICKERS, "baby.svg"), small: path.join(EMOJI, "1f970.svg") },
+  { file: "c4.jpg", big: path.join(EMOJI, "1f48d.svg"), small: path.join(EMOJI, "2764.svg") },
 ];
 
 function plate(from = "#FDF7EC", to = "#F5E7D1") {
