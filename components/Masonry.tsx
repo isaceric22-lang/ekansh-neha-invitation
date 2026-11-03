@@ -196,6 +196,23 @@ const Masonry: React.FC<MasonryProps> = ({
   // Images that have played their reveal, so a relayout doesn't re-fade them.
   const revealedIds = useRef<Set<string>>(new Set());
 
+  // Identity of the current item set. When the caller swaps the list — a filter,
+  // a different album — the cards are freshly mounted but keep the same ids, so
+  // both sets have to be dropped: otherwise the new nodes count as "already
+  // placed / already revealed" and stay at their initial opacity 0, which is how
+  // the grid emptied itself after switching between Photos and Videos.
+  const itemSignature = items.map((item) => item.id).join('|');
+  const lastSignature = useRef<string | null>(null);
+
+  // Reset the placement/reveal bookkeeping before the passes below run, so a
+  // changed item set is laid out and faded in from scratch.
+  useLayoutEffect(() => {
+    if (lastSignature.current === itemSignature) return;
+    lastSignature.current = itemSignature;
+    placedIds.current = new Set();
+    revealedIds.current = new Set();
+  }, [itemSignature]);
+
   // Layout pass: position/size every card. ALWAYS authoritative and never
   // delayed, so it can't be stomped by a stale, staggered entrance tween — the
   // race that previously left cards frozen at an old column count.

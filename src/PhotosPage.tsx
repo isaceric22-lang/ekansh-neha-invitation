@@ -267,6 +267,9 @@ export default function PhotosPage() {
       <div className="h-full w-full overflow-y-auto">
         {tab === "home" ? (
           <Masonry
+            // Remount per filter: the grid keeps per-card GSAP state, and a
+            // filtered list is a different grid, not a relayout of the same one.
+            key={filter}
             items={visible}
             blurToFocus
             scaleOnHover={false}
@@ -340,7 +343,9 @@ export default function PhotosPage() {
         className="absolute inset-x-0 top-0 z-20 flex items-start justify-between px-4"
         style={{ paddingTop: "calc(var(--safe-top) + 12px)" }}
       >
-        <div className="pt-0.5">
+        {/* Clear of the floating close button: it sits over the top-left 51px,
+            so the title starts after it instead of underneath it. */}
+        <div className="pt-0.5 pl-[62px]">
           <div className="text-[13px] font-semibold text-white">
             {WEDDING.ceremony}
           </div>
