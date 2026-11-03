@@ -36,18 +36,19 @@ external image requests.
 
 ## Photographs, clips and stickers
 
-The album is drawn: `photos/01.jpg` … `photos/14.jpg` are the plates composed
-above. Frames from the original template's photograph set that showed a face were
-removed rather than left to stand in for the couple.
+The album is drawn: `photos/01.jpg` … `photos/20.jpg` are the plates composed
+above, with `15.jpg`–`20.jpg` weighted towards the couple and the ceremony. Frames
+from the original template's photograph set that showed a face were removed rather
+than left to stand in for the couple.
 
-The three album clips in `public/videos/` (`venue`, `cake`, `bouquet`) are made by
-`scripts/prepare-clips.mjs` with ffmpeg: a slow camera push over a face-free
-photograph — chairs, cake, bouquet — graded to a warm maroon/gold duotone. They
-are the only photographic material in the app.
+The three album clips in `public/videos/` (`diya`, `mandap`, `hands`) are cut by
+`scripts/prepare-videos.mjs` with ffmpeg from stock footage cached in
+`.tools/stock` (not committed): diyas burning, the mandap dressed, a couple's
+hands — each framed with no face in shot. Every clip has music muxed under it from
+the soft piano in `public/music`, with fades.
 
-`public/stickers/*.png` are the same gold line art cut out on transparency by
-`scripts/prepare-stickers.mjs`, and are sent in the Messages thread the way
-iMessage sends a sticker: no bubble, no caption.
+`public/stickers/*.svg` (`panda`, `baby`, `teddy`) are Twemoji glyphs, used in the
+Messages thread the way iMessage sends a sticker: no bubble, no caption.
 
 ## Music
 

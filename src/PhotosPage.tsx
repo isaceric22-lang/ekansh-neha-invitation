@@ -94,12 +94,19 @@ const PHOTOS: { file: string; height: number }[] = [
   { file: "12.jpg", height: 330 }, // henna vine
   { file: "13.jpg", height: 300 }, // henna flower
   { file: "14.jpg", height: 560 }, // ganesha mark
+  // Weighted towards the couple and the ceremony, like the first page.
+  { file: "15.jpg", height: 300 }, // the pair, wide
+  { file: "16.jpg", height: 545 }, // garland exchange, gold on maroon
+  { file: "17.jpg", height: 440 }, // the ceremony, full bleed
+  { file: "18.jpg", height: 589 }, // the pair, tall gold plate
+  { file: "19.jpg", height: 327 }, // baraat horse
+  { file: "20.jpg", height: 589 }, // palanquin arriving
 ];
 
 const CLIPS: { file: string; height: number }[] = [
-  { file: "venue.mp4", height: 480 },
-  { file: "cake.mp4", height: 440 },
-  { file: "bouquet.mp4", height: 430 },
+  { file: "diya.mp4", height: 480 }, // diyas burning
+  { file: "mandap.mp4", height: 300 }, // the mandap dressed
+  { file: "hands.mp4", height: 300 }, // hands held, below the shoulders
 ];
 
 type AlbumItem = {
@@ -113,16 +120,22 @@ type AlbumItem = {
 
 /** Interleave the clips through the plates so the grid keeps moving. */
 const ORDER: string[] = [
+  "15.jpg",
+  "16.jpg",
+  "diya.mp4",
   "01.jpg",
-  "venue.mp4",
+  "17.jpg",
+  "18.jpg",
+  "hands.mp4",
   "03.jpg",
-  "02.jpg",
-  "05.jpg",
-  "cake.mp4",
+  "19.jpg",
+  "20.jpg",
+  "mandap.mp4",
   "06.jpg",
+  "02.jpg",
   "04.jpg",
+  "05.jpg",
   "07.jpg",
-  "bouquet.mp4",
   "08.jpg",
   "09.jpg",
   "10.jpg",
@@ -132,7 +145,7 @@ const ORDER: string[] = [
   "14.jpg",
 ];
 
-const FAVOURITES = ["01.jpg", "03.jpg", "10.jpg", "06.jpg", "11.jpg", "13.jpg"];
+const FAVOURITES = ["15.jpg", "16.jpg", "18.jpg", "01.jpg", "20.jpg", "17.jpg"];
 
 function buildAlbum(): AlbumItem[] {
   const byFile = new Map<string, AlbumItem>();

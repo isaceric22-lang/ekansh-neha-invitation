@@ -33,9 +33,9 @@ const THREAD: Entry[] = [
   {
     kind: "sticker",
     side: "received",
-    src: "/stickers/peacock.png",
-    alt: "Gold peacock feather sticker",
-    rotate: 7,
+    src: "/stickers/baby.svg",
+    alt: "Baby sticker",
+    rotate: 5,
   },
   {
     kind: "text",
@@ -57,9 +57,9 @@ const THREAD: Entry[] = [
   {
     kind: "sticker",
     side: "sent",
-    src: "/stickers/diya.png",
-    alt: "Gold diya sticker",
-    rotate: -6,
+    src: "/stickers/panda.svg",
+    alt: "Panda sticker",
+    rotate: -5,
   },
   { kind: "text", side: "received", text: "73 days. Not that either of us is counting." },
   { kind: "text", side: "received", text: "Okay, I'm counting 🙈", tapback: "❤️" },
@@ -176,21 +176,6 @@ export default function MessagesPage({ onBack }: { onBack?: () => void }) {
               <div className="h-11 w-11" aria-hidden />
             )}
 
-            {/* Centered avatar + name */}
-            <div className="absolute left-1/2 top-0 flex -translate-x-1/2 flex-col items-center">
-              <div
-                aria-hidden
-                className="flex h-14 w-14 items-center justify-center rounded-full text-[24px] font-semibold text-white select-none shadow-[0_2px_8px_rgba(0,0,0,0.12)]"
-                style={{ background: MONOGRAM_BG }}
-              >
-                N
-              </div>
-              <div className="mt-1 flex items-center gap-0.5 text-[13px] font-medium text-black">
-                <span>Neha</span>
-                <ChevronRight size={13} strokeWidth={2.5} className="text-[#bcbcbc]" />
-              </div>
-            </div>
-
             <button type="button" aria-label="Video call" className={glassCircle}>
               <Video size={22} strokeWidth={2} />
             </button>
@@ -199,6 +184,22 @@ export default function MessagesPage({ onBack }: { onBack?: () => void }) {
 
         {/* Messages */}
         <main className="flex-1 overflow-y-auto px-4 pt-3 pb-2">
+          {/* The contact block sits in the thread, not the nav bar, so Neha's
+              avatar and name scroll away with the messages instead of staying
+              pinned while everything under them moves. */}
+          <div className="mb-3 flex flex-col items-center">
+            <div
+              aria-hidden
+              className="flex h-16 w-16 items-center justify-center rounded-full text-[26px] font-semibold text-white select-none shadow-[0_2px_8px_rgba(0,0,0,0.12)]"
+              style={{ background: MONOGRAM_BG }}
+            >
+              N
+            </div>
+            <div className="mt-1.5 flex items-center gap-0.5 text-[13px] font-medium text-black">
+              <span>Neha</span>
+              <ChevronRight size={13} strokeWidth={2.5} className="text-[#bcbcbc]" />
+            </div>
+          </div>
           {THREAD.map((e, i) => {
             if (e.kind === "date") {
               return (
